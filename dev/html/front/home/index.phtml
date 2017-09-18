@@ -1,4 +1,10 @@
-<ips:template parameters="" />
+<ips:template parameters="$releases" />
 <div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
     <h1 class="ipsType_pageTitle">VPDB</h1>
+
+	<ul>
+		{{foreach $releases as $id => $release}}
+		<li>$release->name</li>
+		{{endforeach}}
+	</ul>
 </div>
