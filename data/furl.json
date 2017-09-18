@@ -24,10 +24,10 @@
 {
 	"topLevel": "vpdb",
 	"pages": {
-		"games": {
+		"vpdb": {
 			"friendly": "",
 			"real": "app=vpdb&module=vpdb&controller=home",
-			"alias": "blog"
+			"alias": "vpdb"
 		}
 	}
 }
