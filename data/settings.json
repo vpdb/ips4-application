@@ -1,0 +1,6 @@
+[
+    {
+        "key": "vpdb_url_api",
+        "default": "https:\/\/api.vpdb.io\/v1"
+    }
+]
