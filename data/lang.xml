@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
  <app key="vpdb" version="10000">
-  <word key="__app_vpdb" js="0">VPDB</word>
+  <word key="__app_vpdb" js="0">VPDB Application</word>
+  <word key="vpdb_page_title" js="0">VPDB Page Title</word>
+  <word key="module__vpdb_vpdb" js="0">VPDB Module</word>
+  <word key="menu__vpdb_vpdb" js="0">VPDB Menu</word>
  </app>
 </language>

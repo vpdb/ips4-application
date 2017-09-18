@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<theme name="Default" author_name="Invision Power Services, Inc" author_url="https://www.invisioncommunity.com"/>
+<theme name="Default" author_name="Invision Power Services, Inc" author_url="https://www.invisioncommunity.com">
+ <template template_group="home" template_name="index" template_data="" template_location="front" template_app="vpdb"><![CDATA[<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
+    <h1 class="ipsType_pageTitle">VPDB</h1>
+</div>]]></template>
+</theme>

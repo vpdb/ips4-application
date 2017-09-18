@@ -1,20 +1,2 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<javascript app="vpdb">
- <order app="global" path="/dev/js//framework/">templates
-common/ips.loader.js
-common/ui
-common/utils
-common
-controllers</order>
- <order app="global" path="/dev/js//library/">underscore
-jquery
-mustache
-jstz
-Debug.js
-app.js</order>
- <order app="global" path="/dev/js//library//jquery">jquery.js
-jquery.history.js
-jquery.transform.js</order>
- <order app="global" path="/dev/js//library//linkify">linkify.min.js
-linkify-jquery.min.js</order>
-</javascript>
+<javascript app="vpdb"/>
