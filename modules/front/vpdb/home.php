@@ -34,12 +34,12 @@ class _home extends \IPS\Dispatcher\Controller
 	protected function manage()
 	{
 		$api = new \RestClient([
-			'base_url' => "https://api.vpdb.io/v1",
+			'base_url' => \IPS\Settings::i()->vpdb_url_api,
 			'format' => "json",
 			//'headers' => ['Authorization' => 'Bearer '.OAUTH_BEARER],
 		]);
 
-		$result = $api->get("/releases", ["per_page" => 6, "sort" => "released_at", "thumb_format" => "square"]);
+		$result = $api->get("/v1/releases", ["per_page" => 6, "sort" => "released_at", "thumb_format" => "square"]);
 
 		$releases = $result->info->http_code == 200 ? $result->decode_response() : $result;
 

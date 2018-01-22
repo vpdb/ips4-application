@@ -4,5 +4,11 @@
             "default_controller": "home",
             "protected": 0
         }
+    },
+    "admin": {
+        "vpdb": {
+            "default_controller": "",
+            "protected": false
+        }
     }
 }

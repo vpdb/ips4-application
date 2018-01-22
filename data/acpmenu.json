@@ -1,2 +1,10 @@
 {
+	"vpdb": {
+		"settings": {
+			"tab": "community",
+			"controller": "settings",
+			"do": "",
+			"restriction": "vpdb_manage"
+		}
+	}
 }
