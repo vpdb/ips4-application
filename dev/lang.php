@@ -16,6 +16,7 @@ $lang = array(
 	'vpdb_url_storage' => 'Storage Endpoint',
 	'vpdb_settings_authentication' => 'Authentication',
 	'vpdb_settings_endpoints' => 'Endpoints',
+	'vpdb_settings_invalid_api' => 'Could not connect to API!',
 	'r__vpdb_manage' => 'Can change VPDB settings?',
 
 );
