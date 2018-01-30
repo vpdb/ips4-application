@@ -5,6 +5,15 @@
   <word key="frontnavigation_vpdb" js="0">VPDB Menu</word>
   <word key="vpdb_page_title" js="0">VPDB Page Title</word>
   <word key="module__vpdb_vpdb" js="0">VPDB Module</word>
-  <word key="menu__vpdb_vpdb" js="0">VPDB Menu</word>
+  <word key="menu__vpdb_vpdb" js="0">VPDB</word>
+  <word key="menu__vpdb_vpdb_settings" js="0">Settings</word>
+  <word key="vpdb_app_key" js="0">App Key</word>
+  <word key="vpdb_oauth_client" js="0">Provider</word>
+  <word key="vpdb_url_api" js="0">API Endpoint</word>
+  <word key="vpdb_url_web" js="0">Web Endpoint</word>
+  <word key="vpdb_url_storage" js="0">Storage Endpoint</word>
+  <word key="vpdb_settings_authentication" js="0">Authentication</word>
+  <word key="vpdb_settings_endpoints" js="0">Endpoints</word>
+  <word key="r__vpdb_manage" js="0">Can change VPDB settings?</word>
  </app>
 </language>

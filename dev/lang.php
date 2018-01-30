@@ -10,6 +10,7 @@ $lang = array(
 	'menu__vpdb_vpdb_settings' => 'Settings',
 
 	'vpdb_app_key' => 'App Key',
+	'vpdb_oauth_client' => 'Provider',
 	'vpdb_url_api' => 'API Endpoint',
 	'vpdb_url_web' => 'Web Endpoint',
 	'vpdb_url_storage' => 'Storage Endpoint',

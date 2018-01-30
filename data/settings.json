@@ -4,6 +4,10 @@
         "default": ""
     },
     {
+        "key": "vpdb_oauth_client",
+        "default": ""
+    },
+    {
         "key": "vpdb_url_web",
         "default": "https:\/\/vpdb.io"
     },

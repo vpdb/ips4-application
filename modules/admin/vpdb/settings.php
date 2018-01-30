@@ -33,15 +33,30 @@ class _settings extends \IPS\Dispatcher\Controller
 	 */
 	protected function manage()
 	{
+		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack('settings');
+
+		$oauth_clients = [];
+		try {
+			foreach( \IPS\Db::i()->select( '*', 'oauth2server_clients' ) as $client ) {
+				$oauth_clients[$client['client_id']] = $client['client_name'];
+			}
+		}
+		catch ( \IPS\Db\Exception $e ) {
+			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('settings')->oauthError();
+			return;
+		}
+
+
 		$form = new \IPS\Helpers\Form;
 
 		$form->addHeader('vpdb_settings_authentication');
-		$form->add( new \IPS\Helpers\Form\Text( 'vpdb_app_key', \IPS\Settings::i()->vpdb_app_key ) );
+		$form->add( new \IPS\Helpers\Form\Text( 'vpdb_app_key', \IPS\Settings::i()->vpdb_app_key, TRUE ) );
+		$form->add( new \IPS\Helpers\Form\Select( 'vpdb_oauth_client', \IPS\Settings::i()->vpdb_oauth_client, TRUE, array( 'options' => $oauth_clients ) ) );
 
 		$form->addHeader('vpdb_settings_endpoints');
-		$form->add( new \IPS\Helpers\Form\Url( 'vpdb_url_web', \IPS\Settings::i()->vpdb_url_web ) );
-		$form->add( new \IPS\Helpers\Form\Url( 'vpdb_url_api', \IPS\Settings::i()->vpdb_url_api ) );
-		$form->add( new \IPS\Helpers\Form\Url( 'vpdb_url_storage', \IPS\Settings::i()->vpdb_url_storage ) );
+		$form->add( new \IPS\Helpers\Form\Url( 'vpdb_url_web', \IPS\Settings::i()->vpdb_url_web, TRUE ) );
+		$form->add( new \IPS\Helpers\Form\Url( 'vpdb_url_api', \IPS\Settings::i()->vpdb_url_api, TRUE ) );
+		$form->add( new \IPS\Helpers\Form\Url( 'vpdb_url_storage', \IPS\Settings::i()->vpdb_url_storage, TRUE ) );
 
 		if ( $form->values() )
 		{
