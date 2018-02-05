@@ -1,14 +1,21 @@
 <?php
 
 $lang = array(
-	'__app_vpdb' => "VPDB Application",
-	'frontnavigation_vpdb' => "VPDB Menu",
-	'vpdb_page_title' => "VPDB Page Title",
 
-	'module__vpdb_vpdb' => "VPDB Module",
+	'__app_vpdb' => "VPDB",
+
+	// front navigation
+	'module__vpdb_vpdb' => "VPDB",
+	'module__vpdb_releases' => "Releases",
+	'frontnavigation_home' => "VPDB Home",
+	'frontnavigation_releases' => "Releases",
+	'frontnavigation_releases_admin' => "Releases (VPDB)",
+
+	// admincp
 	'menu__vpdb_vpdb' => "VPDB",
 	'menu__vpdb_vpdb_settings' => 'Settings',
 
+	// app settings
 	'vpdb_app_key' => 'App Key',
 	'vpdb_oauth_client' => 'Provider',
 	'vpdb_url_api' => 'API Endpoint',
@@ -19,11 +26,14 @@ $lang = array(
 	'vpdb_settings_invalid_api' => 'Could not connect to API!',
 	'r__vpdb_manage' => 'Can change VPDB settings?',
 
-	'vpdb_releases_count' =>  "{# [1:release][?:releases]}",
+	// home
+	'vpdb_home_title' => "VPDB Home",
 
+	// releases - list
 	'sort_release_name' => 'Release Name',
 	'sort_release_date' => 'Most recent',
 	'sort_release_rating' => 'Best rated',
-	'sort_release_popularity' => 'Popularity'
+	'sort_release_popularity' => 'Popularity',
+	'vpdb_releases_count' =>  "{# [1:release][?:releases]}",
 
 );

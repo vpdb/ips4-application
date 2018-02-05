@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <language>
  <app key="vpdb" version="10000">
-  <word key="__app_vpdb" js="0">VPDB Application</word>
-  <word key="frontnavigation_vpdb" js="0">VPDB Menu</word>
-  <word key="vpdb_page_title" js="0">VPDB Page Title</word>
-  <word key="module__vpdb_vpdb" js="0">VPDB Module</word>
+  <word key="__app_vpdb" js="0">VPDB</word>
+  <word key="module__vpdb_vpdb" js="0">VPDB</word>
+  <word key="frontnavigation_home" js="0">VPDB Home</word>
+  <word key="frontnavigation_releases" js="0">Releases</word>
+  <word key="frontnavigation_releases_admin" js="0">Releases (VPDB)</word>
   <word key="menu__vpdb_vpdb" js="0">VPDB</word>
   <word key="menu__vpdb_vpdb_settings" js="0">Settings</word>
   <word key="vpdb_app_key" js="0">App Key</word>
@@ -16,10 +17,11 @@
   <word key="vpdb_settings_endpoints" js="0">Endpoints</word>
   <word key="vpdb_settings_invalid_api" js="0">Could not connect to API!</word>
   <word key="r__vpdb_manage" js="0">Can change VPDB settings?</word>
-  <word key="vpdb_releases_count" js="0">{# [1:release][?:releases]}</word>
+  <word key="vpdb_home_title" js="0">VPDB Home</word>
   <word key="sort_release_name" js="0">Release Name</word>
   <word key="sort_release_date" js="0">Most recent</word>
   <word key="sort_release_rating" js="0">Best rated</word>
   <word key="sort_release_popularity" js="0">Popularity</word>
+  <word key="vpdb_releases_count" js="0">{# [1:release][?:releases]}</word>
  </app>
 </language>

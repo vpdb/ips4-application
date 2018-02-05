@@ -3,12 +3,16 @@
         "vpdb": {
             "default_controller": "home",
             "protected": 0
+        },
+        "releases": {
+            "default_controller": "listReleases",
+            "protected": 0
         }
     },
     "admin": {
         "vpdb": {
             "default_controller": "",
-            "protected": false
+            "protected": 0
         }
     }
 }

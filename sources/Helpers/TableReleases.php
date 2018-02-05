@@ -1,11 +1,11 @@
 <?php
 /**
- * @brief        Table Builder using an \IPS\Content\Item class datasource
- * @author        <a href='https://www.invisioncommunity.com'>Invision Power Services, Inc.</a>
- * @copyright    (c) Invision Power Services, Inc.
- * @license        https://www.invisioncommunity.com/legal/standards/
- * @package        Invision Community
- * @since        16 Jul 2013
+ * @brief        Table builder for a list of VPDB releases
+ * @author       freezy@vpdb.io
+ * @copyright    (c) VPDB
+ * @license      https://www.gnu.org/licenses/old-licenses/gpl-2.0.en.html
+ * @package      VPDB
+ * @since        Jan 2018
  */
 
 namespace IPS\vpdb\Helpers;
@@ -19,16 +19,17 @@ if (!defined('\IPS\SUITE_UNIQUE_KEY')) {
 /**
  * List Table Builder using an \IPS\Content\Item class datasource
  */
-class _Content extends \IPS\Helpers\Table\Table
+class _TableReleases extends Table
 {
 	/**
-	 * _Content constructor.
+	 * Initializes sort options.
+	 *
+	 * @param \IPS\Http\Url $baseUrl Base URL of the page the list table is on
 	 */
 	public function __construct(\IPS\Http\Url $baseUrl)
 	{
 		parent::__construct($baseUrl);
-		$this->rowsTemplate = array(\IPS\Theme::i()->getTemplate('home'), 'releaseRows');
-
+		$this->rowsTemplate = array(\IPS\Theme::i()->getTemplate('releases'), 'releaseRows');
 		$this->sortOptions = array(
 			'release_name' => 'title',
 			'release_date' => 'released_at',
@@ -44,35 +45,32 @@ class _Content extends \IPS\Helpers\Table\Table
 	}
 
 	/**
-	 * Get rows
+	 * Loads all releases from VPDB
 	 *
 	 * @param    array $advancedSearchValues Values from the advanced search form
 	 * @return    array
-	 * @throws \RestClientException
 	 */
 	public function getRows($advancedSearchValues)
 	{
-		error_log(print_r($advancedSearchValues, TRUE));
-		$api = new \RestClient([
-			'base_url' => \IPS\Settings::i()->vpdb_url_api,
-			'format' => 'json',
-			'headers' => ['Authorization' => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key],
-		]);
-
 
 		if (!$this->sortBy) {
 			$this->sortBy = 'released_at';
 		}
 		$sortPrefix = $this->sortDirection == 'asc' ? '' : '-';
 
-		$result = $api->get("/v1/releases", ["per_page" => 6, "sort" => $sortPrefix . $this->sortBy, "thumb_format" => "square"]);
+		$result = $this->api->get("/v1/releases", ["per_page" => 25, "sort" => $sortPrefix . $this->sortBy, "thumb_format" => "square"]);
 		if ($result->info->http_code == 200) {
 			$releases = $result->decode_response();
+
+			// table title
+			$this->title = \IPS\Member::loggedIn()->language()->pluralize(\IPS\Member::loggedIn()->language()->get('vpdb_releases_count'), array($result->headers->x_list_count));
+
+			// add IPS member data
 			foreach ($releases as $release) {
+				$release->url = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=viewRelease&id=' . $release->id . '&gameId=' . $release->game->id);
 				foreach ($release->authors as $author) {
 					if ($author->user->provider_id) {
 						$author->user->member = \IPS\Member::load($author->user->provider_id);
-						$author->user->member_raw = print_r(\IPS\Member::load($author->user->provider_id), true);
 					}
 				}
 			}
