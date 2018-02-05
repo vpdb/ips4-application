@@ -35,13 +35,24 @@ class _home extends \IPS\Dispatcher\Controller
 	{
 		$api = new \RestClient([
 			'base_url' => \IPS\Settings::i()->vpdb_url_api,
-			'format' => "json",
-			//'headers' => ['Authorization' => 'Bearer '.\IPS\Settings::i()->vpdb_app_key],
+			'format' => 'json',
+			'headers' => ['Authorization' => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key],
 		]);
 
 		$result = $api->get("/v1/releases", ["per_page" => 6, "sort" => "released_at", "thumb_format" => "square"]);
-
-		$releases = $result->info->http_code == 200 ? $result->decode_response() : $result;
+		if ($result->info->http_code == 200) {
+			$releases = $result->decode_response();
+			foreach ($releases as $release) {
+				foreach ($release->authors as $author) {
+					if ($author->user->provider_id) {
+						$author->user->member = \IPS\Member::load($author->user->provider_id);
+						$author->user->member_raw = print_r(\IPS\Member::load($author->user->provider_id), true);
+					}
+				}
+			}
+		} else {
+			$releases = [];
+		}
 
 		/* Display */
 		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack('vpdb_page_title');

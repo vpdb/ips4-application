@@ -6,6 +6,28 @@
 <h2>Releases</h2>
 <div class='ipsGrid ipsGrid_collapsePhone'>
 	{{foreach $releases as $id => $release}}
-	<div class='ipsGrid_span3'>$release->name</div>
+	<div class='ipsGrid_span3'>
+		<h3>{$release->game->title} ({$release->game->manufacturer} {$release->game->year})</h3>
+		<h4>{$release->name}</h4>
+		{{foreach $release->authors as $author}}
+			{{if ($author->user->provider_id)}}
+				<ul class='ipsDataItem_lastPoster ipsDataItem_withPhoto ipsType_blendLinks'>
+					<li>
+						{template="userPhoto" app="core" group="global" params="$author->user->member, 'tiny'"}
+					</li>
+					<li>
+						{$author->user->member->link()|raw}
+					</li>
+					<li class="ipsType_light">
+						{{foreach $author->roles as $role}}
+							{$role}
+						{{endforeach}}
+					</li>
+				</ul>
+			{{else}}
+				<span>{$author->user->name}</span>
+			{{endif}}
+		{{endforeach}}
+	</div>
 	{{endforeach}}
 </div>
