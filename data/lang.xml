@@ -14,6 +14,12 @@
   <word key="vpdb_url_storage" js="0">Storage Endpoint</word>
   <word key="vpdb_settings_authentication" js="0">Authentication</word>
   <word key="vpdb_settings_endpoints" js="0">Endpoints</word>
+  <word key="vpdb_settings_invalid_api" js="0">Could not connect to API!</word>
   <word key="r__vpdb_manage" js="0">Can change VPDB settings?</word>
+  <word key="vpdb_releases_count" js="0">{# [1:release][?:releases]}</word>
+  <word key="sort_release_name" js="0">Release Name</word>
+  <word key="sort_release_date" js="0">Most recent</word>
+  <word key="sort_release_rating" js="0">Best rated</word>
+  <word key="sort_release_popularity" js="0">Popularity</word>
  </app>
 </language>

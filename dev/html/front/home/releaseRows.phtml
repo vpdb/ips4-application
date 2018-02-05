@@ -1,0 +1,39 @@
+<ips:template parameters="$table, $headers, $releases" />
+{{if count( $releases )}}
+	{{foreach $releases as $release}}
+	<li class='ipsDataItem'>
+		<div class='ipsDataItem_generic ipsDataItem_size3 ipsPos_top'>
+			{template="thumbImage" group="global" app="core" params="$release->thumb->image->url, $release->id"}
+		</div>
+		<div class='ipsDataItem_main'>
+
+			<!-- game title -->
+			<h4 class='ipsDataItem_title ipsType_sectionHead ipsContained_container'>
+				<span class='ipsType_break ipsContained'><a href='#'>{$release->game->title} ({$release->game->manufacturer} {$release->game->year})</a></span>
+			</h4>
+
+			<!-- release name -->
+			<p class='ipsDataItem_meta'>
+				{$release->name}
+			</p>
+
+			<!-- authors -->
+			<p class='ipsType_reset ipsType_light ipsType_blendLinks'>
+				By
+				{{foreach $release->authors as $author}}
+					{{if ($author->user->provider_id)}}
+						{$author->user->member->link()|raw}
+					{{else}}
+						{$author->user->name}
+					{{endif}}
+				{{endforeach}}
+			</p>
+
+			<!-- downloads -->
+			<p class='ipsType_normal'>
+				<span {{if !$release->counter->downloads}}class='ipsType_light'{{endif}}><i class='fa fa-arrow-circle-down'></i> {lang="num_downloads" pluralize="$release->counter->downloads"}</span>
+			</p>
+		</div>
+	</li>
+	{{endforeach}}
+{{endif}}

@@ -19,4 +19,11 @@ $lang = array(
 	'vpdb_settings_invalid_api' => 'Could not connect to API!',
 	'r__vpdb_manage' => 'Can change VPDB settings?',
 
+	'vpdb_releases_count' =>  "{# [1:release][?:releases]}",
+
+	'sort_release_name' => 'Release Name',
+	'sort_release_date' => 'Most recent',
+	'sort_release_rating' => 'Best rated',
+	'sort_release_popularity' => 'Popularity'
+
 );

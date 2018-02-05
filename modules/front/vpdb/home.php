@@ -50,13 +50,20 @@ class _home extends \IPS\Dispatcher\Controller
 					}
 				}
 			}
+			/* Build table */
+			$table = new \IPS\vpdb\Helpers\Content($this->url);
+			$table->classes = array('ipsDataList_large');
+			$table->title = \IPS\Member::loggedIn()->language()->pluralize(\IPS\Member::loggedIn()->language()->get('vpdb_releases_count'), array($result->headers->x_list_count));
+
 		} else {
 			$releases = [];
+			$table = null;
 		}
+
 
 		/* Display */
 		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack('vpdb_page_title');
-		\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('home')->index($releases);
+		\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('home')->index($releases, (string) $table);
 	}
 
 	// Create new methods with the same name as the 'do' parameter which should execute it
