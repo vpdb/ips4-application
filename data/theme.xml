@@ -11,7 +11,137 @@
 <div class='ipsBox cDownloadsCategoryTable'>
 {$table|raw}
 </div>]]></template>
- <template template_group="home" template_name="releaseRows" template_data="$table, $headers, $releases" template_location="front" template_app="vpdb"><![CDATA[{{if count( $releases )}}
+ <template template_group="releases" template_name="download" template_data="$release, $game, $roms, $flavors" template_location="front" template_app="vpdb"><![CDATA[
+
+<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
+	<h1 class="ipsType_pageTitle">Download <b>{$game->title}</b></h1>
+	<h2 class="ipsType_sectionHead">&nbsp;by
+		{{foreach $release->authors as $author}}
+			{{if ($author->user->provider_id)}}
+				{$author->user->member->link()|raw}
+			{{else}}
+				{$author->user->name}
+			{{endif}}
+		{{endforeach}}
+	</h2>
+</div>
+
+<form class="ipsForm">
+	<div class='ipsGrid ipsGrid_collapsePhone'>
+		{{foreach $release->versions as $version}}
+			{{foreach $version->files as $versionFile}}
+				{{if (preg_match("/^application\/x-visual-pinball-table/i", $versionFile->file->mime_type))}}
+					<div class='ipsBox ipsGrid_span6 ipsSpacer_bottom'>
+						<div class='ipsColumns'>
+							<div class='ipsColumn ipsColumn_narrow'>
+								<div class="ipsPad_half">
+									<img src="{$versionFile->playfield_image->variations->square->url}" style="max-width: 100%"/>
+								</div>
+							</div>
+							<div class='ipsColumn ipsColumn_fluid ipsTruncate ipsTruncate_line'>
+								<ul class='ipsFieldRow_content ipsField_fieldList'>
+									<li>
+										<span class='ipsCustomInput'>
+											<input type='checkbox' id='elExampleCheckbox{$versionFile->file->id}'>
+											<span></span>
+										</span>
+										<div class='ipsField_fieldList_content'>
+											<label for='elExampleCheckbox{$versionFile->file->id}'>{$versionFile->file->name}</label>
+										</div>
+										<p class='ipsFieldRow_desc'>Version {$version->version}</p>
+										<p><b>{$flavors['orientation']['values'][$versionFile->flavor->orientation]['name']}</b> Orientation,
+											<b>{$flavors['lighting']['values'][$versionFile->flavor->lighting]['name']}</b> Lightning</p>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+				{{endif}}
+			{{endforeach}}
+		{{endforeach}}
+	</div>
+
+	<!-- media options -->
+	<div class='ipsFieldRow ipsSpacer_top'>
+		<span class='ipsFieldRow_label'>Media</span>
+		<ul class='ipsFieldRow_content ipsList_reset'>
+			<li class='ipsFieldRow_inlineCheckbox'>
+				<span class='ipsCustomInput'>
+					<input type='checkbox' id='includeGameMedia'>
+					<span></span>
+				</span>
+				<label for='includeGameMedia'>Include game media</label>
+			</li>
+			<li class='ipsFieldRow_inlineCheckbox'>
+				<span class='ipsCustomInput'>
+					<input type='checkbox' id='includePlayfieldImage'>
+					<span></span>
+				</span>
+				<label for='includePlayfieldImage'>Include playfield shots</label>
+			</li>
+			<li class='ipsFieldRow_inlineCheckbox'>
+				<span class='ipsCustomInput'>
+					<input type='checkbox' id='includePlayfieldVideo'>
+					<span></span>
+				</span>
+				<label for='includePlayfieldVideo'>Include playfield videos</label>
+			</li>
+		</ul>
+	</div>
+
+	<!-- roms -->
+	<div class='ipsFieldRow ipsSpacer_top'>
+		<span class='ipsFieldRow_label'>ROMs</span>
+		<table class="ipsTable ipsTable_zebra">
+			<thead>
+				<tr>
+					<th colspan="2"></th>
+					<th>Version</th>
+					<th>Language</th>
+					<th>Notes</th>
+					<th>DLs</th>
+					<th>Size</th>
+				</tr>
+			</thead>
+			<tbody>
+				{{foreach $roms as $rom}}
+				<tr>
+					<td>
+						<span class='ipsCustomInput'>
+							<input type='checkbox' id='rom{$rom->id}'>
+							<span></span>
+						</span>
+
+					</td>
+					<td>
+						<div class='ipsField_fieldList_content'>
+							<label for='rom{$rom->id}'>{$rom->file->name}</label>
+						</div>
+					</td>
+					<td>{$rom->version}</td>
+					<td>{{foreach $rom->languages as $lang}}<span>{$lang}</span> {{endforeach}}</td>
+					<td>{$rom->notes}</td>
+					<td>{$rom->file->counter->downloads}</td>
+					<td>{$rom->file->bytes}</td>
+
+				</tr>
+				{{endforeach}}
+			</tbody>
+		</table>
+	</div>
+
+</form>
+
+]]></template>
+ <template template_group="releases" template_name="list" template_data="$table" template_location="front" template_app="vpdb"><![CDATA[
+<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
+	<h1 class="ipsType_pageTitle">Releases</h1>
+</div>
+
+<div class='ipsBox cDownloadsCategoryTable'>
+	{$table|raw}
+</div>]]></template>
+ <template template_group="releases" template_name="releaseRows" template_data="$table, $headers, $releases" template_location="front" template_app="vpdb"><![CDATA[{{if count( $releases )}}
 	{{foreach $releases as $release}}
 	<li class='ipsDataItem'>
 		<div class='ipsDataItem_generic ipsDataItem_size3 ipsPos_top'>
@@ -21,7 +151,7 @@
 
 			<!-- game title -->
 			<h4 class='ipsDataItem_title ipsType_sectionHead ipsContained_container'>
-				<span class='ipsType_break ipsContained'><a href='#'>{$release->game->title} ({$release->game->manufacturer} {$release->game->year})</a></span>
+				<span class='ipsType_break ipsContained'><a href='{$release->url}'>{$release->game->title} ({$release->game->manufacturer} {$release->game->year})</a></span>
 			</h4>
 
 			<!-- release name -->
@@ -49,6 +179,91 @@
 	</li>
 	{{endforeach}}
 {{endif}}]]></template>
+ <template template_group="releases" template_name="view" template_data="$release, $game" template_location="front" template_app="vpdb"><![CDATA[
+<!-- title -->
+<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
+	<h1 class="ipsType_pageTitle">{$release->game->title}</h1>
+	<h2 class="ipsType_sectionHead">&nbsp;({$release->game->manufacturer} {$release->game->year})</h2>
+	<h2>{$release->name}</h2>
+</div>
+<div class="ipsBox">
+	<div class="ipsColumns ipsColumns_collapsePhone">
+
+		<!-- left column -->
+		<article class="ipsColumn ipsColumn_fluid">
+			<div class="ipsPad">
+
+				<!-- description -->
+				{$release->description|raw}
+
+				<!-- authors -->
+				<h2>Authors</h2>
+				{{foreach $release->authors as $author}}
+					{{if ($author->user->provider_id)}}
+						<div class='ipsPhotoPanel ipsPhotoPanel_tiny ipsClearfix ipsSpacer_bottom'>
+							{template="userPhoto" app="core" group="global" params="$author->user->member, 'tiny'"}
+							<div>
+								<p class='ipsType_reset ipsType_normal ipsType_blendLinks'>
+									{$author->user->member->link()|raw}
+								</p>
+								<div class="ipsType_light">
+									{{foreach $author->roles as $role}}
+										{$role}
+									{{endforeach}}
+								</div>
+							</div>
+						</div>
+					{{else}}
+						<div class="ipsPhotoPanel ipsPhotoPanel_tiny ipsClearfix ipsSpacer_bottom">
+							<span class="ipsUserPhoto ipsUserPhoto_tiny">
+								<img src="//www.gravatar.com/avatar/{$author->user->gravatar_id}?default=retro">
+							</span>
+							<div>
+								<p class="ipsType_reset ipsType_normal ipsType_blendLinks">
+									{$author->user->name}
+								</p>
+								<div class="ipsType_light">
+									{{foreach $author->roles as $role}}
+									{$role}
+									{{endforeach}}
+								</div>
+							</div>
+						</div>
+					{{endif}}
+				{{endforeach}}
+
+			</div>
+		</article>
+
+		<!-- right column -->
+		<aside class="ipsColumn ipsColumn_wide ipsAreaBackground">
+			<div class="ipsPad">
+
+				<!-- logo -->
+				{{if $game->logo}}
+				<img src="{$game->logo->variations->medium->url}" alt="{$game->title}" class="ipsSpacer_bottom"
+					 style="max-width:100%">
+				{{endif}}
+
+				<!-- playfield image -->
+				<div class="ipsAreaBackground_reset ipsPad_half">
+					<span href="{$release->thumb->image->url}" data-ipsLightbox
+						  data-ipsLightbox-group="release_{$release->id}"
+						  data-fullURL="{$release->thumb->image->url}">
+						<img src="{$release->thumb->image->url}" alt="{$release->title}" style="max-width:100%">
+					</span>
+				</div>
+
+				<!-- download button -->
+				<ul class="ipsToolList ipsToolList_vertical ipsSpacer_top ipsClearfix">
+					<li>
+						<a href="{$release->download}" class="ipsButton ipsButton_fullWidth ipsButton_large ipsButton_important">Download</a>
+					</li>
+				</ul>
+			</div>
+		</aside>
+	</div>
+</div>]]></template>
  <template template_group="settings" template_name="oauthError" template_data="" template_location="admin" template_app="vpdb"><![CDATA[<h3>Whoops!</h3>
 
 <p>In order to use the VPDB application, you'll need another application installed:</p>

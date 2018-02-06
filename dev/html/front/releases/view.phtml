@@ -14,7 +14,7 @@
 			<div class="ipsPad">
 
 				<!-- description -->
-				{$release->descriptionParsed|raw}
+				{$release->description|raw}
 
 				<!-- authors -->
 				<h2>Authors</h2>
@@ -58,17 +58,28 @@
 		<!-- right column -->
 		<aside class="ipsColumn ipsColumn_wide ipsAreaBackground">
 			<div class="ipsPad">
+
+				<!-- logo -->
 				{{if $game->logo}}
 				<img src="{$game->logo->variations->medium->url}" alt="{$game->title}" class="ipsSpacer_bottom"
 					 style="max-width:100%">
 				{{endif}}
+
+				<!-- playfield image -->
 				<div class="ipsAreaBackground_reset ipsPad_half">
-				<span href="{$release->thumb->image->url}" data-ipsLightbox
-					  data-ipsLightbox-group="release_{$release->id}"
-					  data-fullURL="{$release->thumb->image->url}">
-					<img src="{$release->thumb->image->url}" alt="{$release->title}" style="max-width:100%">
-				</span>
+					<span href="{$release->thumb->image->url}" data-ipsLightbox
+						  data-ipsLightbox-group="release_{$release->id}"
+						  data-fullURL="{$release->thumb->image->url}">
+						<img src="{$release->thumb->image->url}" alt="{$release->title}" style="max-width:100%">
+					</span>
 				</div>
+
+				<!-- download button -->
+				<ul class="ipsToolList ipsToolList_vertical ipsSpacer_top ipsClearfix">
+					<li>
+						<a href="{$release->download}" class="ipsButton ipsButton_fullWidth ipsButton_large ipsButton_important">Download</a>
+					</li>
+				</ul>
 			</div>
 		</aside>
 	</div>

@@ -3,6 +3,7 @@
  <app key="vpdb" version="10000">
   <word key="__app_vpdb" js="0">VPDB</word>
   <word key="module__vpdb_vpdb" js="0">VPDB</word>
+  <word key="module__vpdb_releases" js="0">Releases</word>
   <word key="frontnavigation_home" js="0">VPDB Home</word>
   <word key="frontnavigation_releases" js="0">Releases</word>
   <word key="frontnavigation_releases_admin" js="0">Releases (VPDB)</word>

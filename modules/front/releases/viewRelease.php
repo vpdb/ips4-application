@@ -69,8 +69,11 @@ class _viewRelease extends \IPS\Dispatcher\Controller
 			$release = $rlsResult->decode_response();
 			$game = $gameResult->decode_response();
 
-			// parse markdown
-			$release->descriptionParsed = $this->Parsedown->text($release->description);
+			// description as markdown
+			$release->description = $this->Parsedown->text($release->description);
+
+			// download link
+			$release->download = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=downloadRelease&id=' . $release->id . '&gameId=' . $release->game->id);
 
 			// add IPS member data
 			foreach ($release->authors as $author) {
