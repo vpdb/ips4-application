@@ -16,6 +16,8 @@ if (!defined('\IPS\SUITE_UNIQUE_KEY')) {
 class _downloadRelease extends \IPS\Dispatcher\Controller
 {
 	protected $flavors;
+	protected $releaseId;
+	protected $gameId;
 
 	/**
 	 * Constructor
@@ -46,6 +48,22 @@ class _downloadRelease extends \IPS\Dispatcher\Controller
 				)
 			)
 		);
+		$this->api = new \RestClient([
+			'base_url' => \IPS\Settings::i()->vpdb_url_api,
+			'format' => 'json',
+			'headers' => [
+				'X-User-Id' => \IPS\Member::loggedIn()->member_id,
+				'Authorization' => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key
+			],
+		]);
+		$this->storageApi = new \RestClient([
+			'base_url' => \IPS\Settings::i()->vpdb_url_storage,
+			'format' => 'json',
+			'headers' => [
+				'X-User-Id' => \IPS\Member::loggedIn()->member_id,
+				'Authorization' => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key
+			],
+		]);
 	}
 
 
@@ -56,35 +74,38 @@ class _downloadRelease extends \IPS\Dispatcher\Controller
 	 */
 	public function execute()
 	{
-
 		parent::execute();
-
-
 	}
 
 	/**
-	 * ...
+	 * Fetches release and game info to display which items to include in the download.
 	 *
 	 * @return    void
+	 * @throws \RestClientException
 	 */
 	protected function manage()
 	{
-		$this->api = new \RestClient([
-			'base_url' => \IPS\Settings::i()->vpdb_url_api,
-			'format' => 'json',
-			'headers' => ['Authorization' => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key],
-		]);
-
 		$this->releaseId = \IPS\Request::i()->id;
 		$this->gameId = \IPS\Request::i()->gameId;
 
-		$rlsResult = $this->api->get("/v1/releases/" . $this->releaseId, ['thumb_flavor' => 'orientation:fs', 'thumb_format' => 'medium']);
-		$gameResult = $this->api->get("/v1/games/" . $this->gameId);
-		$romResult = $this->api->get("/v1/games/" . $this->gameId . '/roms');
+		$rlsResult = $this->api->get('/v1/releases/' . $this->releaseId, ['thumb_flavor' => 'orientation:fs', 'thumb_format' => 'medium']);
+		$gameResult = $this->api->get('/v1/games/' . $this->gameId);
+		$romResult = $this->api->get('/v1/games/' . $this->gameId . '/roms');
 		if ($rlsResult->info->http_code == 200 && $gameResult->info->http_code == 200 && $romResult->info->http_code == 200) {
 			$release = $rlsResult->decode_response();
 			$game = $gameResult->decode_response();
 			$roms = $romResult->decode_response();
+			$action = $release->url = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=downloadRelease&do=prepareDownload&id=' . $release->id . '&gameId=' . $game->id);
+
+			// retrieve game media
+			$addedCategories = [];
+			$gameMedia = [];
+			foreach ($game->media as $medium) {
+				if (!in_array($medium->category, $addedCategories)) {
+					$gameMedia[] = $medium->id;
+				}
+				$addedCategories[] = $medium->category;
+			};
 
 			// add IPS member data
 			foreach ($release->authors as $author) {
@@ -95,8 +116,57 @@ class _downloadRelease extends \IPS\Dispatcher\Controller
 
 			/* Display */
 			\IPS\Output::i()->title = $release->game->title . ' - ' . $release->name;
-			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->download($release, $game, $roms, $this->flavors);
+			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->download($release, $game, $roms, $gameMedia, $this->flavors, $action);
 		}
+	}
+
+	protected function prepareDownload()
+	{
+		$this->releaseId = \IPS\Request::i()->id;
+		$this->gameId = \IPS\Request::i()->gameId;
+
+		// check if the user is logged, if not, redirect to login screen
+
+		// check if the user is on vpdb, if not, redirect to vpdb register screen
+		$checkUser = $this->api->get('/v1/user');
+		if ($checkUser->info->http_code == 200) {
+
+			$downloadUrl = \IPS\Settings::i()->vpdb_url_storage . '/v1/releases/' . $this->releaseId;
+			$authenticate = $this->storageApi->post('/v1/authenticate', json_encode(['paths' => $downloadUrl]), ['Content-Type' => 'application/json']);
+			if ($authenticate->info->http_code == 200) {
+				$download = [
+					'files' => $_POST['tableFile'],
+					'media' => [
+						'playfield_image' => $_POST['includePlayfieldImage'],
+						'playfield_video' => $_POST['includePlayfieldVideo'],
+					],
+					'roms' => $_POST['rom']
+				];
+				if ($_POST['includeGameMedia']) {
+					$download['game_media'] = $_POST['media'];
+				}
+				$authBody = $authenticate->decode_response();
+				$fullUrl = $downloadUrl .
+					'?body=' . urlencode(json_encode($download)) .
+					'&token=' . $authBody->$downloadUrl .
+					'&save_as=1';
+				\IPS\Output::i()->redirect(\IPS\Http\Url::external($fullUrl), 'Downloading');
+
+			} else {
+				\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('home')->apiError($authenticate->response);
+			}
+
+		} else {
+			// otherwise, redirect to vpdb backend with download link
+			$back = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=downloadRelease&id=' . $this->releaseId . '&gameId=' . $this->gameId);
+			$continue = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=downloadRelease&do=register&id=' . $this->releaseId . '&gameId=' . $this->gameId);
+			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('home')->register($back, $continue);
+		}
+	}
+
+	protected function register()
+	{
+
 	}
 
 	// Create new methods with the same name as the 'do' parameter which should execute it

@@ -1,5 +1,4 @@
-<ips:template parameters="$release, $game, $roms, $flavors" />
-
+<ips:template parameters="$release, $game, $roms, $gameMedia, $flavors, $action"/>
 
 <div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
 	<h1 class="ipsType_pageTitle">Download <b>{$game->title}</b></h1>
@@ -14,31 +13,38 @@
 	</h2>
 </div>
 
-<form class="ipsForm">
-	<div class='ipsGrid ipsGrid_collapsePhone'>
+<form class="ipsForm" method="post" action="{$action}">
+	<!-- hidden variables -->
+	<input type="hidden" name="csrfKey" value="{expression="\IPS\Session::i()->csrfKey"}" />
+	{{foreach $gameMedia as $medium}}
+	<input type="hidden" name="media[]" value="{$medium}" />
+	{{endforeach}}
+
+	<!-- table files --->
+	<div class="ipsGrid ipsGrid_collapsePhone">
 		{{foreach $release->versions as $version}}
 			{{foreach $version->files as $versionFile}}
 				{{if (preg_match("/^application\/x-visual-pinball-table/i", $versionFile->file->mime_type))}}
-					<div class='ipsBox ipsGrid_span6 ipsSpacer_bottom'>
-						<div class='ipsColumns'>
-							<div class='ipsColumn ipsColumn_narrow'>
+					<div class="ipsBox ipsGrid_span6 ipsSpacer_bottom">
+						<div class="ipsColumns">
+							<div class="ipsColumn ipsColumn_narrow">
 								<div class="ipsPad_half">
 									<img src="{$versionFile->playfield_image->variations->square->url}" style="max-width: 100%"/>
 								</div>
 							</div>
-							<div class='ipsColumn ipsColumn_fluid ipsTruncate ipsTruncate_line'>
-								<ul class='ipsFieldRow_content ipsField_fieldList'>
+							<div class="ipsColumn ipsColumn_fluid ipsTruncate ipsTruncate_line">
+								<ul class="ipsFieldRow_content ipsField_fieldList">
 									<li>
-										<span class='ipsCustomInput'>
-											<input type='checkbox' id='elExampleCheckbox{$versionFile->file->id}'>
+										<span class="ipsCustomInput">
+											<input type="checkbox" name="tableFile[]" value="{$versionFile->file->id}" id="file{$versionFile->file->id}">
 											<span></span>
 										</span>
-										<div class='ipsField_fieldList_content'>
-											<label for='elExampleCheckbox{$versionFile->file->id}'>{$versionFile->file->name}</label>
+										<div class="ipsField_fieldList_content">
+											<label for="file{$versionFile->file->id}">{$versionFile->file->name}</label>
 										</div>
-										<p class='ipsFieldRow_desc'>Version {$version->version}</p>
-										<p><b>{$flavors['orientation']['values'][$versionFile->flavor->orientation]['name']}</b> Orientation,
-											<b>{$flavors['lighting']['values'][$versionFile->flavor->lighting]['name']}</b> Lightning</p>
+										<p class="ipsFieldRow_desc">Version {$version->version}</p>
+										<p><b>{$flavors["orientation"]["values"][$versionFile->flavor->orientation]["name"]}</b> Orientation,
+											<b>{$flavors["lighting"]["values"][$versionFile->flavor->lighting]["name"]}</b> Lightning</p>
 									</li>
 								</ul>
 							</div>
@@ -50,36 +56,36 @@
 	</div>
 
 	<!-- media options -->
-	<div class='ipsFieldRow ipsSpacer_top'>
-		<span class='ipsFieldRow_label'>Media</span>
-		<ul class='ipsFieldRow_content ipsList_reset'>
-			<li class='ipsFieldRow_inlineCheckbox'>
-				<span class='ipsCustomInput'>
-					<input type='checkbox' id='includeGameMedia'>
+	<div class="ipsFieldRow ipsSpacer_top">
+		<span class="ipsFieldRow_label">Media</span>
+		<ul class="ipsFieldRow_content ipsList_reset">
+			<li class="ipsFieldRow_inlineCheckbox">
+				<span class="ipsCustomInput">
+					<input type="checkbox" name="includeGameMedia" value="true" id="includeGameMedia">
 					<span></span>
 				</span>
-				<label for='includeGameMedia'>Include game media</label>
+				<label for="includeGameMedia">Include game media</label>
 			</li>
-			<li class='ipsFieldRow_inlineCheckbox'>
-				<span class='ipsCustomInput'>
-					<input type='checkbox' id='includePlayfieldImage'>
+			<li class="ipsFieldRow_inlineCheckbox">
+				<span class="ipsCustomInput">
+					<input type="checkbox" name="includePlayfieldImage" value="true" id="includePlayfieldImage">
 					<span></span>
 				</span>
-				<label for='includePlayfieldImage'>Include playfield shots</label>
+				<label for="includePlayfieldImage">Include playfield shots</label>
 			</li>
-			<li class='ipsFieldRow_inlineCheckbox'>
-				<span class='ipsCustomInput'>
-					<input type='checkbox' id='includePlayfieldVideo'>
+			<li class="ipsFieldRow_inlineCheckbox">
+				<span class="ipsCustomInput">
+					<input type="checkbox" name="includePlayfieldVideo" value="true" id="includePlayfieldVideo">
 					<span></span>
 				</span>
-				<label for='includePlayfieldVideo'>Include playfield videos</label>
+				<label for="includePlayfieldVideo">Include playfield videos</label>
 			</li>
 		</ul>
 	</div>
 
 	<!-- roms -->
-	<div class='ipsFieldRow ipsSpacer_top'>
-		<span class='ipsFieldRow_label'>ROMs</span>
+	<div class="ipsFieldRow ipsSpacer_top">
+		<span class="ipsFieldRow_label">ROMs</span>
 		<table class="ipsTable ipsTable_zebra">
 			<thead>
 				<tr>
@@ -95,15 +101,15 @@
 				{{foreach $roms as $rom}}
 				<tr>
 					<td>
-						<span class='ipsCustomInput'>
-							<input type='checkbox' id='rom{$rom->id}'>
+						<span class="ipsCustomInput">
+							<input type="checkbox" name="rom[]" value="{$rom->id}" id="rom{$rom->id}">
 							<span></span>
 						</span>
 
 					</td>
 					<td>
-						<div class='ipsField_fieldList_content'>
-							<label for='rom{$rom->id}'>{$rom->file->name}</label>
+						<div class="ipsField_fieldList_content">
+							<label for="rom{$rom->id}">{$rom->file->name}</label>
 						</div>
 					</td>
 					<td>{$rom->version}</td>
@@ -118,5 +124,7 @@
 		</table>
 	</div>
 
+	<!-- button -->
+	<button type="submit" class="ipsButton ipsButton_large ipsButton_important">Download</button>
 </form>
 
