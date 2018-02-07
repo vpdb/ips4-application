@@ -1,0 +1,7 @@
+<ips:template parameters="$url, $body, $token, $saveAs, $redirectTo" />
+
+<form id="downloadForm" method="GET" target="_self" action="{$url}" data-controller="vpdb.front.download" data-redirect-to="{$redirectTo}">
+	<input type="hidden" name="body" value="{$body}">
+	<input type="hidden" name="save_as" value="{$saveAs}">
+	<input type="hidden" name="token" value="{$token}">
+</form>

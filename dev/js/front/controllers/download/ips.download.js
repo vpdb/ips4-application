@@ -1,6 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<javascript app="vpdb">
- <file javascript_app="vpdb" javascript_location="front" javascript_path="controllers/download" javascript_name="ips.download.js" javascript_type="controller" javascript_version="10000" javascript_position="1000049">/**
+/**
  * This submits the form, causing the browser to download the file from VPDB,
  * and redirects to the given URL.
  */
@@ -15,5 +13,4 @@
 			}, 3000);
 		}
 	});
-}(jQuery, _));</file>
-</javascript>
+}(jQuery, _));

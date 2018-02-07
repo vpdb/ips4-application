@@ -7,6 +7,10 @@
         "releases": {
             "default_controller": "listReleases",
             "protected": 0
+        },
+        "core": {
+            "default_controller": "",
+            "protected": false
         }
     },
     "admin": {

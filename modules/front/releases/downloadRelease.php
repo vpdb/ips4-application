@@ -124,6 +124,7 @@ class _downloadRelease extends \IPS\Dispatcher\Controller
 	{
 		$this->releaseId = \IPS\Request::i()->id;
 		$this->gameId = \IPS\Request::i()->gameId;
+		$releaseUrl = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=viewRelease&id=' . $this->releaseId . '&gameId=' . $this->gameId);
 
 		// check if the user is logged, if not, redirect to login screen
 
@@ -146,11 +147,8 @@ class _downloadRelease extends \IPS\Dispatcher\Controller
 					$download['game_media'] = $_POST['media'];
 				}
 				$authBody = $authenticate->decode_response();
-				$fullUrl = $downloadUrl .
-					'?body=' . urlencode(json_encode($download)) .
-					'&token=' . $authBody->$downloadUrl .
-					'&save_as=1';
-				\IPS\Output::i()->redirect(\IPS\Http\Url::external($fullUrl), 'Downloading');
+				\IPS\Output::i()->jsFiles = array_merge(\IPS\Output::i()->jsFiles, \IPS\Output::i()->js('front_download.js', 'vpdb'));
+				\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->download($downloadUrl, json_encode($download), $authBody->$downloadUrl, '1', $releaseUrl);
 
 			} else {
 				\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('home')->apiError($authenticate->response);
@@ -158,9 +156,9 @@ class _downloadRelease extends \IPS\Dispatcher\Controller
 
 		} else {
 			// otherwise, redirect to vpdb backend with download link
-			$back = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=downloadRelease&id=' . $this->releaseId . '&gameId=' . $this->gameId);
+
 			$continue = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=downloadRelease&do=register&id=' . $this->releaseId . '&gameId=' . $this->gameId);
-			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('home')->register($back, $continue);
+			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('home')->register($releaseUrl, $continue);
 		}
 	}
 
