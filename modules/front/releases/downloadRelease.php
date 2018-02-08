@@ -147,18 +147,31 @@ class _downloadRelease extends \IPS\Dispatcher\Controller
 					$download['game_media'] = $_POST['media'];
 				}
 				$authBody = $authenticate->decode_response();
-				\IPS\Output::i()->jsFiles = array_merge(\IPS\Output::i()->jsFiles, \IPS\Output::i()->js('front_download.js', 'vpdb'));
-				\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->download($downloadUrl, json_encode($download), $authBody->$downloadUrl, '1', $releaseUrl);
+
+				$fullUrl = $downloadUrl .
+					'?body=' . urlencode(json_encode($download)) .
+					'&token=' . $authBody->$downloadUrl .
+					'&save_as=1';
+
+				$anon = new \RestClient(['base_url' => \IPS\Settings::i()->vpdb_url_storage]);
+				$downloadCheck = $anon->execute($fullUrl, 'HEAD');
+				if ($downloadCheck->info->http_code == 200) {
+					\IPS\Output::i()->jsFiles = array_merge(\IPS\Output::i()->jsFiles, \IPS\Output::i()->js('front_download.js', 'vpdb'));
+					\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->download($downloadUrl, json_encode($download), $authBody->$downloadUrl, '1', $releaseUrl);
+
+				} else {
+					\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->downloadError($downloadCheck->headers->x_error, $releaseUrl);
+				}
 
 			} else {
-				\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('home')->apiError($authenticate->response);
+				\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->apiError($authenticate->response);
 			}
 
 		} else {
 			// otherwise, redirect to vpdb backend with download link
 
 			$continue = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=downloadRelease&do=register&id=' . $this->releaseId . '&gameId=' . $this->gameId);
-			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('home')->register($releaseUrl, $continue);
+			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->register($releaseUrl, $continue);
 		}
 	}
 

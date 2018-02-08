@@ -1,28 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <theme name="Default" author_name="Invision Power Services, Inc" author_url="https://www.invisioncommunity.com">
+ <template template_group="core" template_name="apiError" template_data="$body" template_location="front" template_app="vpdb"><![CDATA[
+<p>API Error:</p>
+<pre>
+	{$body}
+</pre>]]></template>
  <template template_group="core" template_name="download" template_data="$url, $body, $token, $saveAs, $redirectTo" template_location="front" template_app="vpdb"><![CDATA[
 <form id="downloadForm" method="GET" target="_self" action="{$url}" data-controller="vpdb.front.download" data-redirect-to="{$redirectTo}">
 	<input type="hidden" name="body" value="{$body}">
 	<input type="hidden" name="save_as" value="{$saveAs}">
 	<input type="hidden" name="token" value="{$token}">
 </form>]]></template>
- <template template_group="home" template_name="apiError" template_data="$body" template_location="front" template_app="vpdb"><![CDATA[
-<p>API Error:</p>
-<pre>
-	{$body}
-</pre>]]></template>
- <template template_group="home" template_name="index" template_data="$releases, $table" template_location="front" template_app="vpdb"><![CDATA[
-<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
-	<h1 class="ipsType_pageTitle">VPDB</h1>
-	<div class="ipsPageHeader_info ipsType_normal">
-		<p>Releases</p>
-	</div>
+ <template template_group="core" template_name="downloadError" template_data="$message, $url" template_location="front" template_app="vpdb"><![CDATA[
+<p>Whoops, there was an error from VPDB when trying to download the file:</p>
+<quote>{$message}</quote>
 
-</div>
-<div class='ipsBox cDownloadsCategoryTable'>
-{$table|raw}
-</div>]]></template>
- <template template_group="home" template_name="register" template_data="$back, $continue" template_location="front" template_app="vpdb"><![CDATA[
+<a href="{$url}" class="ipsButton ipsButton_large ipsButton_important">Back</a>]]></template>
+ <template template_group="core" template_name="register" template_data="$back, $continue" template_location="front" template_app="vpdb"><![CDATA[
 <div class='ipsGrid ipsGrid_collapsePhone'>
 	<div class='ipsGrid_span3'></div>
 	<div class='ipsGrid_span6'>
@@ -43,6 +37,17 @@
 
 
 ]]></template>
+ <template template_group="home" template_name="index" template_data="$releases, $table" template_location="front" template_app="vpdb"><![CDATA[
+<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
+	<h1 class="ipsType_pageTitle">VPDB</h1>
+	<div class="ipsPageHeader_info ipsType_normal">
+		<p>Releases</p>
+	</div>
+
+</div>
+<div class='ipsBox cDownloadsCategoryTable'>
+{$table|raw}
+</div>]]></template>
  <template template_group="releases" template_name="download" template_data="$release, $game, $roms, $gameMedia, $flavors, $action" template_location="front" template_app="vpdb"><![CDATA[
 <div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
 	<h1 class="ipsType_pageTitle">Download <b>{$game->title}</b></h1>
@@ -169,7 +174,8 @@
 	</div>
 
 	<!-- button -->
-	<button type="submit" class="ipsButton ipsButton_large ipsButton_important">Download</button>
+	<button type="submit" class="ipsButton ipsButton_large ipsButton_important ipsPos_right">Download</button>
+	<div class="ipsClearfix"></div>
 </form>
 
 ]]></template>
