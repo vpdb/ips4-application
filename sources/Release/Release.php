@@ -27,12 +27,12 @@ class _Release extends \IPS\Content\Item implements
 	\IPS\Content\Lockable
 {
 	/**
-	 * @brief	Application
+	 * @brief    Application
 	 */
 	public static $application = 'vpdb';
 
 	/**
-	 * @brief	Module
+	 * @brief    Module
 	 */
 	public static $module = 'releases';
 
@@ -42,7 +42,7 @@ class _Release extends \IPS\Content\Item implements
 	public static $commentClass = 'IPS\vpdb\Release\Comment';
 
 	/**
-	 * @brief	Database Column Map
+	 * @brief    Database Column Map
 	 */
 	public static $databaseColumnMap = array();
 
@@ -72,10 +72,11 @@ class _Release extends \IPS\Content\Item implements
 	/**
 	 * Get URL
 	 *
-	 * @param	string|NULL		$action		Action
-	 * @return	\IPS\Http\Url
+	 * @param    string|NULL $action Action
+	 * @return    \IPS\Http\Url
 	 */
-	public function url( $action=NULL ) {
+	public function url($action = NULL)
+	{
 		if ($action) {
 			return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=viewRelease&id=' . $this->release->id . '&gameId=' . $this->release->game->id . '&do=' . $action);
 		} else {
@@ -86,8 +87,8 @@ class _Release extends \IPS\Content\Item implements
 	/**
 	 * Fetch Meta Data
 	 *
-	 * @return	array
-	 * @throws	\BadMethodCallException
+	 * @return    array
+	 * @throws    \BadMethodCallException
 	 */
 	public function getMeta()
 	{
@@ -95,18 +96,18 @@ class _Release extends \IPS\Content\Item implements
 		return array();
 	}
 
-	public function get_id() {
-		return $this->release->id;
+	/**
+	 * Supported Meta Data Types
+	 *
+	 * @return    array
+	 */
+	public static function supportedMetaDataTypes()
+	{
+		return array();
 	}
 
-	/**
-	 * Check if this content has meta data
-	 *
-	 * @return	bool
-	 * @throws	\BadMethodCallException
-	 */
-//	public function hasMetaData()
-//	{
-//		return false;
-//	}
+	public function get_id()
+	{
+		return $this->release->game->id . '/' . $this->release->id;
+	}
 }

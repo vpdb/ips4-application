@@ -16,6 +16,20 @@
 				"values": [],
 				"zerofill": false
 			},
+			"comment_game_release_id": {
+				"allow_null": false,
+				"auto_increment": false,
+				"binary": false,
+				"comment": "",
+				"decimals": null,
+				"default": null,
+				"length": 100,
+				"name": "comment_game_release_id",
+				"type": "VARCHAR",
+				"unsigned": false,
+				"values": [],
+				"zerofill": false
+			},
 			"comment_edit_time": {
 				"allow_null": false,
 				"auto_increment": false,
@@ -114,20 +128,6 @@
 				"values": [],
 				"zerofill": false
 			},
-			"comment_release_id": {
-				"allow_null": false,
-				"auto_increment": false,
-				"binary": false,
-				"comment": "",
-				"decimals": null,
-				"default": null,
-				"length": 16,
-				"name": "comment_release_id",
-				"type": "VARCHAR",
-				"unsigned": false,
-				"values": [],
-				"zerofill": false
-			},
 			"comment_append_edit": {
 				"allow_null": false,
 				"auto_increment": false,
@@ -188,15 +188,15 @@
 					"comment_post_date"
 				]
 			},
-			"release_id": {
+			"game_release_id": {
 				"type": "key",
-				"name": "release_id",
+				"name": "game_release_id",
 				"length": [
 					null,
 					null
 				],
 				"columns": [
-					"comment_release_id",
+					"comment_game_release_id",
 					"comment_post_date"
 				]
 			},
