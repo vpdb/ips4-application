@@ -14,19 +14,14 @@
 
 			<!-- release name -->
 			<p class='ipsDataItem_meta'>
-				{$release->name}
+				{$release->name} v{$release->versions[0]->version}
 			</p>
 
 			<!-- authors -->
 			<p class='ipsType_reset ipsType_light ipsType_blendLinks'>
-				By
-				{{foreach $release->authors as $author}}
-					{{if ($author->user->provider_id)}}
-						{$author->user->member->link()|raw}
-					{{else}}
-						{$author->user->name}
-					{{endif}}
-				{{endforeach}}
+				By {{foreach $release->authors as $i => $author}}{{if ($i > 0 && $i < count($release->authors) - 1)}}, {{endif}}{{if ($i == count($release->authors) - 1)}} and {{endif}}
+					{{if ($author->user->provider_id)}}{$author->user->member->link()|raw}{{else}}{$author->user->name}{{endif}}{{endforeach}},
+					released {expression="\IPS\DateTime::ts(strtotime($release->versions[0]->released_at))->html()" raw="true"}
 			</p>
 
 			<!-- downloads -->

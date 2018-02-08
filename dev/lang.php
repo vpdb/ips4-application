@@ -1,5 +1,10 @@
 <?php
-
+/**
+ * This is the real language file.
+ *
+ * There is also an .XML which gets compiled from this file, but hey, why take
+ * a script when we can parse an XML?
+ */
 $lang = array(
 
 	'__app_vpdb' => "VPDB",

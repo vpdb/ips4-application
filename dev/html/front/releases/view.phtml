@@ -1,86 +1,78 @@
 <ips:template parameters="$release, $game"/>
 
-<!-- title -->
-<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
-	<h1 class="ipsType_pageTitle">{$release->game->title}</h1>
-	<h2 class="ipsType_sectionHead">&nbsp;({$release->game->manufacturer} {$release->game->year})</h2>
-	<h2>{$release->name}</h2>
-</div>
-<div class="ipsBox">
-	<div class="ipsColumns ipsColumns_collapsePhone">
+<div class="ipsPad">
 
-		<!-- left column -->
-		<article class="ipsColumn ipsColumn_fluid">
-			<div class="ipsPad">
+	<!-- title -->
+	<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
+		<h1 class="ipsType_pageTitle">{$release->game->title}</h1>
+		<h2 class="ipsType_sectionHead">&nbsp;({$release->game->manufacturer} {$release->game->year})</h2>
+		<h2>{$release->name}</h2>
+	</div>
+	<div class="ipsBox">
+		<div class="ipsColumns ipsColumns_collapsePhone">
 
-				<!-- description -->
-				{$release->description|raw}
+			<!-- left column -->
+			<article class="ipsColumn ipsColumn_fluid">
+				<div class="ipsPad">
 
-				<!-- authors -->
-				<h2>Authors</h2>
-				{{foreach $release->authors as $author}}
-					{{if ($author->user->provider_id)}}
-						<div class='ipsPhotoPanel ipsPhotoPanel_tiny ipsClearfix ipsSpacer_bottom'>
-							{template="userPhoto" app="core" group="global" params="$author->user->member, 'tiny'"}
-							<div>
-								<p class='ipsType_reset ipsType_normal ipsType_blendLinks'>
-									{$author->user->member->link()|raw}
-								</p>
-								<div class="ipsType_light">
-									{{foreach $author->roles as $role}}
-										{$role}
-									{{endforeach}}
+					<!-- description -->
+					{$release->description|raw}
+
+					<!-- authors -->
+					<h2>Authors</h2>
+					{{foreach $release->authors as $author}}
+						<div class="ipsPhotoPanel ipsPhotoPanel_tiny ipsSpacer_bottom ipsPos_left" style="margin-right:15px">
+							{{if ($author->user->provider_id)}}
+								{template="userPhoto" app="core" group="global" params="$author->user->member, 'tiny'"}
+								<div>
+									<p class='ipsType_reset ipsType_normal ipsType_blendLinks'>{$author->user->member->link()|raw}</p>
 								</div>
+							{{else}}
+								<span class="ipsUserPhoto ipsUserPhoto_tiny">
+									<img src="//www.gravatar.com/avatar/{$author->user->gravatar_id}?default=retro">
+								</span>
+								<div>
+									<p class="ipsType_reset ipsType_normal ipsType_blendLinks">{$author->user->name}</p>
+								</div>
+							{{endif}}
+							<div class="ipsType_light">
+								{{foreach $author->roles as $role}}
+								{$role}
+								{{endforeach}}
 							</div>
 						</div>
-					{{else}}
-						<div class="ipsPhotoPanel ipsPhotoPanel_tiny ipsClearfix ipsSpacer_bottom">
-							<span class="ipsUserPhoto ipsUserPhoto_tiny">
-								<img src="//www.gravatar.com/avatar/{$author->user->gravatar_id}?default=retro">
-							</span>
-							<div>
-								<p class="ipsType_reset ipsType_normal ipsType_blendLinks">
-									{$author->user->name}
-								</p>
-								<div class="ipsType_light">
-									{{foreach $author->roles as $role}}
-									{$role}
-									{{endforeach}}
-								</div>
-							</div>
-						</div>
-					{{endif}}
-				{{endforeach}}
-
-			</div>
-		</article>
-
-		<!-- right column -->
-		<aside class="ipsColumn ipsColumn_wide ipsAreaBackground">
-			<div class="ipsPad">
-
-				<!-- logo -->
-				{{if $game->logo}}
-				<img src="{$game->logo->variations->medium->url}" alt="{$game->title}" class="ipsSpacer_bottom"
-					 style="max-width:100%">
-				{{endif}}
-
-				<!-- playfield image -->
-				<div class="ipsAreaBackground_reset ipsPad_half">
-					<span href="{$release->thumb->image->url}" data-ipsLightbox
-						  data-ipsLightbox-group="release_{$release->id}"
-						  data-fullURL="{$release->thumb->image->url}">
-						<img src="{$release->thumb->image->url}" alt="{$release->title}" style="max-width:100%">
-					</span>
+					{{endforeach}}
+					<div class="ipsClearfix"></div>
 				</div>
+			</article>
 
-				<!-- download button -->
-				<ul class="ipsToolList ipsToolList_vertical ipsSpacer_top ipsClearfix">
-					<li>
-						<a href="{$release->download}" class="ipsButton ipsButton_fullWidth ipsButton_large ipsButton_important">Download</a>
-					</li>
-				</ul>
-			</div>
-		</aside>
+			<!-- right column -->
+			<aside class="ipsColumn ipsColumn_wide ipsAreaBackground">
+				<div class="ipsPad">
+
+					<!-- logo -->
+					{{if $game->logo}}
+					<img src="{$game->logo->variations->medium->url}" alt="{$game->title}" class="ipsSpacer_bottom"
+						 style="max-width:100%">
+					{{endif}}
+
+					<!-- playfield image -->
+					<div class="ipsAreaBackground_reset ipsPad_half">
+						<span href="{$release->thumb->image->url}" data-ipsLightbox
+							  data-ipsLightbox-group="release_{$release->id}"
+							  data-fullURL="{$release->thumb->image->url}">
+							<img src="{$release->thumb->image->url}" alt="{$release->title}" style="max-width:100%">
+						</span>
+					</div>
+
+					<!-- download button -->
+					<ul class="ipsToolList ipsToolList_vertical ipsSpacer_top ipsClearfix">
+						<li>
+							<a href="{$release->download}" class="ipsButton ipsButton_fullWidth ipsButton_large ipsButton_important">Download</a>
+						</li>
+					</ul>
+				</div>
+			</aside>
+		</div>
 	</div>
 </div>
