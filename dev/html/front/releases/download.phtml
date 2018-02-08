@@ -40,7 +40,7 @@
 												<label for="file{$versionFile->file->id}">{$versionFile->file->name}</label>
 											</div>
 											<div class="ipsFieldRow_desc">Version {$version->version}, released {expression="\IPS\DateTime::ts(strtotime($versionFile->released_at))->html()" raw="true"}</div>
-											{{if ($versionFile->flavor->orientation === "any" && $versionFile->flavor->lighting === "any")}}
+											{{if ($versionFile->flavor->orientation === "any" AND $versionFile->flavor->lighting === "any")}}
 												<p><b>{$flavors["orientation"]["values"][$versionFile->flavor->orientation]["name"]}</b> Orientation ({$versionFile->flavor->orientation}),
 													<b>{$flavors["lighting"]["values"][$versionFile->flavor->lighting]["name"]}</b> Lightning ({$versionFile->flavor->lighting})</p>
 											{{else}}

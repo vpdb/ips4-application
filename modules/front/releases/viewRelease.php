@@ -66,8 +66,11 @@ class _viewRelease extends \IPS\Dispatcher\Controller
 		$rlsResult = $this->api->get("/v1/releases/" . $this->releaseId, ['thumb_flavor' => 'orientation:fs', 'thumb_format' => 'medium']);
 		$gameResult = $this->api->get("/v1/games/" . $this->gameId);
 		if ($rlsResult->info->http_code == 200 && $gameResult->info->http_code == 200) {
+
 			$release = $rlsResult->decode_response();
 			$game = $gameResult->decode_response();
+
+			$releaseObj = new \IPS\vpdb\Release($release);
 
 			// description as markdown
 			$release->description = $this->Parsedown->text($release->description);
@@ -83,7 +86,7 @@ class _viewRelease extends \IPS\Dispatcher\Controller
 			}
 			/* Display */
 			\IPS\Output::i()->title = $release->game->title . ' - ' . $release->name;
-			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->view($release, $game);
+			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->view($release, $game, $releaseObj->renderComments());
 		}
 
 

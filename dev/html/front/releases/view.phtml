@@ -1,4 +1,4 @@
-<ips:template parameters="$release, $game"/>
+<ips:template parameters="$release, $game, $comments"/>
 
 <div class="ipsPad">
 
@@ -74,5 +74,15 @@
 				</div>
 			</aside>
 		</div>
+	</div>
+
+	<!-- comments -->
+	<div data-role='releaseComments'>
+		{{if $comments}}
+		<br>
+		<a id="replies"></a>
+		<h2 class='ipsHide'>{lang="user_feedback"}</h2>
+		{$comments|raw}
+		{{endif}}
 	</div>
 </div>
