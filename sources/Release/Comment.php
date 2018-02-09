@@ -82,26 +82,26 @@ class _Comment extends \IPS\Content\Comment implements \IPS\Content\EditHistory,
 	public static $hideLogKey = 'vpdb-releases';
 
 	/**
-	 * Get items with permisison check
-	 *
-	 * @note    We override in order to provide checking against album restrictions
-	 * @param    array $where Where clause
-	 * @param    string $order MySQL ORDER BY clause (NULL to order by date)
-	 * @param    int|array $limit Limit clause
-	 * @param    string $permissionKey A key which has a value in the permission map (either of the container or of this class) matching a column ID in core_permission_index
-	 * @param    mixed $includeHiddenItems Include hidden comments? NULL to detect if currently logged in member has permission, -1 to return public content only, TRUE to return unapproved content and FALSE to only return unapproved content the viewing member submitted
-	 * @param    int $queryFlags Select bitwise flags
-	 * @param    \IPS\Member $member The member (NULL to use currently logged in member)
-	 * @param    bool $joinContainer If true, will join container data (set to TRUE if your $where clause depends on this data)
-	 * @param    bool $joinComments If true, will join comment data (set to TRUE if your $where clause depends on this data)
-	 * @param    bool $joinReviews If true, will join review data (set to TRUE if your $where clause depends on this data)
-	 * @return    \IPS\Patterns\ActiveRecordIterator|int
+	 * Release reference.
+	 * @var \IPS\vpdb\Release
 	 */
-//	public static function getItemsWithPermission( $where=array(), $order=NULL, $limit=10, $permissionKey='read', $includeHiddenItems=\IPS\Content\Hideable::FILTER_AUTOMATIC, $queryFlags=0, \IPS\Member $member=NULL, $joinContainer=FALSE, $joinComments=FALSE, $joinReviews=FALSE, $countOnly=FALSE, $joins=NULL )
-//	{
-//		$where[] = \IPS\gallery\Image::getItemsWithPermissionWhere( $where, $member, $joins );
-//		return parent::getItemsWithPermission( $where, $order, $limit, $permissionKey, $includeHiddenItems, $queryFlags, $member, $joinContainer, $joinComments, $joinReviews, $countOnly, $joins );
-//	}
+	public $item;
+
+	/**
+	 * Construct ActiveRecord from database row
+	 *
+	 * @param    array $data Row from database table
+	 * @param    bool $updateMultitonStoreIfExists Replace current object in multiton store if it already exists there?
+	 * @return    static
+	 */
+	public static function constructFromData($data, $updateMultitonStoreIfExists = TRUE)
+	{
+		$obj = parent::constructFromData($data, $updateMultitonStoreIfExists);
+		if ($data['vpdb_release_comments']['comment_game_release_id']) {
+			$obj->item = new \IPS\vpdb\Release($data['vpdb_release_comments']['comment_game_release_id']);
+		}
+		return $obj;
+	}
 
 	/**
 	 * Get URL for doing stuff
@@ -111,7 +111,8 @@ class _Comment extends \IPS\Content\Comment implements \IPS\Content\EditHistory,
 	 */
 	public function url($action = 'find')
 	{
-		return parent::url($action)->setQueryString('tab', 'comments');
+		$url = parent::url($action)->setQueryString('id', $this->item->getReleaseId())->setQueryString('gameId', $this->item->getGameId());
+		return $url;
 	}
 
 	/**
@@ -181,7 +182,9 @@ class _Comment extends \IPS\Content\Comment implements \IPS\Content\EditHistory,
 	 */
 	public function item()
 	{
-		// we don't care about the content, we just need an instance.
-		return new \IPS\vpdb\Release(null);
+		if (!$this->item) {
+			$this->item = new \IPS\vpdb\Release($this->mapped('item'));
+		}
+		return $this->item;
 	}
 }

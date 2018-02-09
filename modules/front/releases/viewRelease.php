@@ -15,8 +15,14 @@ if (!defined('\IPS\SUITE_UNIQUE_KEY')) {
 /**
  * Retrieves release details from VPDB and displays them.
  */
-class _viewRelease extends \IPS\Dispatcher\Controller
+class _viewRelease extends \IPS\Content\Controller
 {
+
+	/**
+	 * [Content\Controller]	Class
+	 */
+	protected static $contentModel = 'IPS\vpdb\Release';
+
 	/**
 	 * ID of the release at VPDB
 	 * @var string
