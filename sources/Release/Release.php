@@ -164,6 +164,12 @@ class _Release extends \IPS\Content\Item implements
 	 */
 	public function get_id()
 	{
+		// the fucking modlog needs an int as id. let's give it an int.
+		foreach(debug_backtrace() as $trace) {
+			if ($trace['function'] == 'modLog') {
+				return 0;
+			}
+		}
 		return $this->release->game->id . '/' . $this->release->id;
 	}
 
