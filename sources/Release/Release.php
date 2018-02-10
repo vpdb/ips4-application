@@ -165,8 +165,9 @@ class _Release extends \IPS\Content\Item implements
 	public function get_id()
 	{
 		// the fucking modlog needs an int as id. let's give it an int.
-		foreach(debug_backtrace() as $trace) {
-			if ($trace['function'] == 'modLog') {
+		$stack = debug_backtrace();
+		foreach($stack as $trace) {
+			if ($trace['function'] == 'modLog' || $trace['function'] == 'react') {
 				return 0;
 			}
 		}
