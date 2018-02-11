@@ -1,4 +1,127 @@
 {
+	"vpdb_releases": {
+		"name": "vpdb_releases",
+		"columns": {
+			"release_id": {
+				"allow_null": false,
+				"auto_increment": true,
+				"binary": false,
+				"comment": "Numerical ID so we can reference shit at IPS",
+				"decimals": null,
+				"default": null,
+				"length": 10,
+				"name": "release_id",
+				"type": "INT",
+				"unsigned": false,
+				"values": [],
+				"zerofill": false
+			},
+			"release_id_vpdb": {
+				"allow_null": false,
+				"auto_increment": false,
+				"binary": false,
+				"comment": "The original ID from VPDB",
+				"decimals": null,
+				"default": null,
+				"length": 16,
+				"name": "release_id_vpdb",
+				"type": "VARCHAR",
+				"unsigned": false,
+				"values": [],
+				"zerofill": false
+			},
+			"release_game_id_vpdb": {
+				"allow_null": false,
+				"auto_increment": false,
+				"binary": false,
+				"comment": "The game ID from VPDB",
+				"decimals": null,
+				"default": null,
+				"length": 255,
+				"name": "release_game_id_vpdb",
+				"type": "VARCHAR",
+				"unsigned": false,
+				"values": [],
+				"zerofill": false
+			},
+			"release_game_title": {
+				"allow_null": false,
+				"auto_increment": false,
+				"binary": false,
+				"comment": "",
+				"decimals": null,
+				"default": null,
+				"length": 255,
+				"name": "release_game_title",
+				"type": "VARCHAR",
+				"unsigned": false,
+				"values": [],
+				"zerofill": false
+			},
+			"release_game_manufacturer": {
+				"allow_null": true,
+				"auto_increment": false,
+				"binary": false,
+				"comment": "",
+				"decimals": null,
+				"default": null,
+				"length": 127,
+				"name": "release_game_manufacturer",
+				"type": "VARCHAR",
+				"unsigned": false,
+				"values": [],
+				"zerofill": false
+			},
+			"release_game_year": {
+				"allow_null": true,
+				"auto_increment": false,
+				"binary": false,
+				"comment": "",
+				"decimals": null,
+				"default": null,
+				"length": 127,
+				"name": "release_game_year",
+				"type": "SMALLINT",
+				"unsigned": false,
+				"values": [],
+				"zerofill": false
+			}
+		},
+		"indexes": {
+			"PRIMARY": {
+				"type": "primary",
+				"name": "PRIMARY",
+				"length": [
+					null
+				],
+				"columns": [
+					"release_id_vpdb"
+				]
+			},
+			"release_id": {
+				"type": "key",
+				"name": "release_id",
+				"length": [
+					null
+				],
+				"columns": [
+					"release_id"
+				]
+			},
+			"id_vpdb": {
+				"type": "key",
+				"name": "id_vpdb",
+				"length": [
+					null,
+					null
+				],
+				"columns": [
+					"release_id_vpdb",
+					"release_game_id_vpdb"
+				]
+			}
+		}
+	},
 	"vpdb_release_comments": {
 		"name": "vpdb_release_comments",
 		"columns": {
@@ -16,16 +139,16 @@
 				"values": [],
 				"zerofill": false
 			},
-			"comment_game_release_id": {
+			"comment_release_id": {
 				"allow_null": false,
 				"auto_increment": false,
 				"binary": false,
 				"comment": "",
 				"decimals": null,
-				"default": null,
-				"length": 100,
-				"name": "comment_game_release_id",
-				"type": "VARCHAR",
+				"default": "0",
+				"length": 10,
+				"name": "comment_release_id",
+				"type": "BIGINT",
 				"unsigned": false,
 				"values": [],
 				"zerofill": false
@@ -188,7 +311,7 @@
 					"comment_post_date"
 				]
 			},
-			"game_release_id": {
+			"release_id": {
 				"type": "key",
 				"name": "game_release_id",
 				"length": [
@@ -196,7 +319,7 @@
 					null
 				],
 				"columns": [
-					"comment_game_release_id",
+					"comment_release_id",
 					"comment_post_date"
 				]
 			},

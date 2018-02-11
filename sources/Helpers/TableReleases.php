@@ -58,26 +58,16 @@ class _TableReleases extends Table
 		}
 		$sortPrefix = $this->sortDirection == 'asc' ? '' : '-';
 
-		$result = $this->api->get("/v1/releases", ["per_page" => 25, "sort" => $sortPrefix . $this->sortBy, "thumb_format" => "square"]);
-		if ($result->info->http_code == 200) {
-			$releases = $result->decode_response();
+		try {
+			list($releases, $numReleases) = $this->api->getReleases(["per_page" => 25, "sort" => $sortPrefix . $this->sortBy, "thumb_format" => "square"]);
 
 			// table title
-			$this->title = \IPS\Member::loggedIn()->language()->pluralize(\IPS\Member::loggedIn()->language()->get('vpdb_releases_count'), array($result->headers->x_list_count));
+			$this->title = \IPS\Member::loggedIn()->language()->pluralize(\IPS\Member::loggedIn()->language()->get('vpdb_releases_count'), array($numReleases));
+			return $releases;
 
-			// add IPS member data
-			foreach ($releases as $release) {
-				$release->url = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=viewRelease&id=' . $release->id . '&gameId=' . $release->game->id);
-				foreach ($release->authors as $author) {
-					if ($author->user->provider_id) {
-						$author->user->member = \IPS\Member::load($author->user->provider_id);
-					}
-				}
-			}
-		} else {
-			$releases = [];
+		} catch (\ApiException $e) {
+			return [];
 		}
-		return $releases;
 	}
 
 

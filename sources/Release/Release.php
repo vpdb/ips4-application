@@ -126,7 +126,7 @@ class _Release extends \IPS\Content\Item implements
 		}
 	}
 
-	/**
+	/**f
 	 * Fetch Meta Data
 	 *
 	 * @return    array
