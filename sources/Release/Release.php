@@ -37,12 +37,12 @@ class _Release extends \IPS\Content\Item implements
 	public static $module = 'releases';
 
 	/**
-	 * @brief	Database Table
+	 * @brief    Database Table
 	 */
 	public static $databaseTable = 'vpdb_releases';
 
 	/**
-	 * @brief	Database Prefix
+	 * @brief    Database Prefix
 	 */
 	public static $databasePrefix = 'release_';
 
@@ -58,16 +58,18 @@ class _Release extends \IPS\Content\Item implements
 	 * @brief    Database Column Map
 	 */
 	public static $databaseColumnMap = array(
-		'title'					=> 'caption',
-		'num_comments'			=> 'comments',
-		'unapproved_comments'	=> 'unapproved_comments',
-		'hidden_comments'		=> 'hidden_comments',
-		'last_comment'			=> 'last_comment',
+		'title' => 'caption',
+		'num_comments' => 'comments',
+		'unapproved_comments' => 'unapproved_comments',
+		'hidden_comments' => 'hidden_comments',
+		'last_comment' => 'last_comment',
 	);
+
+	protected static $databaseIdFields = array('release_id', 'release_id_vpdb');
 
 	/**
 	 * Used in moderator log
-	 * @brief	Title
+	 * @brief    Title
 	 */
 	public static $title = 'vpdb_release';
 
@@ -80,26 +82,6 @@ class _Release extends \IPS\Content\Item implements
 	 * @var bool If false, only game and release IDs are set.
 	 */
 	protected $populated = false;
-
-	/**
-	 * Construct with data from VPDB
-	 * @param $release array|string Release details from VPDB
-	 */
-//	public function __construct($release)
-//	{
-//		if (is_string($release)) {
-//			if (\strpos($release, '/') !== false) {
-//				list($gameId, $releaseId) = explode("/", $release);
-//			} else {
-//				$releaseId = $release;
-//				$gameId = null;
-//			}
-//			$this->release = (object)['id' => $releaseId, 'game' => (object)['id' => $gameId]];
-//		} else {
-//			$this->release = $release;
-//			$this->populated = true;
-//		}
-//	}
 
 	/**
 	 * Get comments output
@@ -119,9 +101,9 @@ class _Release extends \IPS\Content\Item implements
 	public function url($action = NULL)
 	{
 		if ($action) {
-			return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=viewRelease&id=' . $this->release->id . '&gameId=' . $this->release->game->id . '&do=' . $action);
+			return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=view&releaseId=' . $this->getReleaseId() . '&gameId=' . $this->getGameId() . '&do=' . $action);
 		} else {
-			return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=viewRelease&id=' . $this->release->id . '&gameId=' . $this->release->game->id);
+			return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=view&releaseId=' . $this->getReleaseId() . '&gameId=' . $this->getGameId());
 		}
 	}
 
@@ -138,6 +120,27 @@ class _Release extends \IPS\Content\Item implements
 	}
 
 	/**
+	 * Load and check permissions
+	 *
+	 * @return    static
+	 * @throws    \OutOfRangeException
+	 */
+	public static function loadAndCheckPerms($id)
+	{
+		if (!$id) {
+			$obj = static::load(\IPS\Request::i()->releaseId, 'release_id_vpdb');
+		} else {
+			$obj = static::load($id);
+		}
+
+		if (!$obj->canView(\IPS\Member::loggedIn())) {
+			throw new \OutOfRangeException;
+		}
+
+		return $obj;
+	}
+
+	/**
 	 * Supported Meta Data Types
 	 *
 	 * @return    array
@@ -149,35 +152,12 @@ class _Release extends \IPS\Content\Item implements
 
 	public function getReleaseId()
 	{
-		return $this->release_id_vpdb;
+		return $this->id_vpdb;
 	}
 
 	public function getGameId()
 	{
-		return $this->release_game_id_vpdb;
+		return $this->game_id_vpdb;
 	}
 
-	/**
-	 * Needed during comment creation
-	 * @return string
-	 */
-//	public function get_id()
-//	{
-//		// the fucking modlog needs an int as id. let's give it an int.
-//		$stack = debug_backtrace();
-//		foreach($stack as $trace) {
-//			if ($trace['function'] == 'modLog' || $trace['function'] == 'react') {
-//				return 0;
-//			}
-//		}
-//		return $this->release->game->id . '/' . $this->release->id;
-//	}
-
-//	/**
-//	 * Needed when logging event after deleting
-//	 * @return string
-//	 */
-//	public function get_title() {
-//		return $this->getReleaseId();
-//	}
 }

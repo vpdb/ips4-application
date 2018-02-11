@@ -87,34 +87,6 @@ class _Comment extends \IPS\Content\Comment implements \IPS\Content\EditHistory,
 	public $item;
 
 	/**
-	 * Construct ActiveRecord from database row
-	 *
-	 * @param    array $data Row from database table
-	 * @param    bool $updateMultitonStoreIfExists Replace current object in multiton store if it already exists there?
-	 * @return    static
-	 */
-//	public static function constructFromData($data, $updateMultitonStoreIfExists = TRUE)
-//	{
-//		$obj = parent::constructFromData($data, $updateMultitonStoreIfExists);
-//		if ($data['vpdb_release_comments']['comment_game_release_id']) {
-//			$obj->item = new \IPS\vpdb\Release($data['vpdb_release_comments']['comment_game_release_id']);
-//		}
-//		return $obj;
-//	}
-
-	/**
-	 * Get URL for doing stuff
-	 *
-	 * @param    string|NULL $action Action
-	 * @return    \IPS\Http\Url
-	 */
-//	public function url($action = 'find')
-//	{
-//		$url = parent::url($action)->setQueryString('id', $this->item->getReleaseId())->setQueryString('gameId', $this->item->getGameId());
-//		return $url;
-//	}
-
-	/**
 	 * Do stuff after creating (abstracted as comments and reviews need to do different things)
 	 *
 	 * @return    void
@@ -173,17 +145,4 @@ class _Comment extends \IPS\Content\Comment implements \IPS\Content\EditHistory,
 		\IPS\Output::i()->cssFiles = array_merge(\IPS\Output::i()->cssFiles, \IPS\Theme::i()->css('embed.css', 'gallery', 'front'));
 		return \IPS\Theme::i()->getTemplate('global', 'gallery')->embedImageComment($this, $this->item(), $this->url()->setQueryString($params));
 	}
-
-	/**
-	 * Get containing item
-	 *
-	 * @return    \IPS\Content\Item
-	 */
-//	public function item()
-//	{
-//		if (!$this->item) {
-//			$this->item = new \IPS\vpdb\Release($this->mapped('item'));
-//		}
-//		return $this->item;
-//	}
 }

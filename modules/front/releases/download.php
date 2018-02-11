@@ -95,7 +95,7 @@ class _downloadRelease extends \IPS\Dispatcher\Controller
 			$release = $rlsResult->decode_response();
 			$game = $gameResult->decode_response();
 			$roms = $romResult->decode_response();
-			$action = $release->url = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=downloadRelease&do=prepareDownload&id=' . $release->id . '&gameId=' . $game->id);
+			$action = $release->url = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&do=prepareDownload&releaseId=' . $release->id . '&gameId=' . $game->id);
 
 			// retrieve game media
 			$addedCategories = [];
@@ -122,9 +122,9 @@ class _downloadRelease extends \IPS\Dispatcher\Controller
 
 	protected function prepareDownload()
 	{
-		$this->releaseId = \IPS\Request::i()->id;
+		$this->releaseId = \IPS\Request::i()->releaseId;
 		$this->gameId = \IPS\Request::i()->gameId;
-		$releaseUrl = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=viewRelease&id=' . $this->releaseId . '&gameId=' . $this->gameId);
+		$releaseUrl = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=view&releaseId=' . $this->releaseId . '&gameId=' . $this->gameId);
 
 		// check if the user is logged, if not, redirect to login screen
 
@@ -170,7 +170,7 @@ class _downloadRelease extends \IPS\Dispatcher\Controller
 		} else {
 			// otherwise, redirect to vpdb backend with download link
 
-			$continue = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=downloadRelease&do=register&id=' . $this->releaseId . '&gameId=' . $this->gameId);
+			$continue = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&do=register&releaseId=' . $this->releaseId . '&gameId=' . $this->gameId);
 			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->register($releaseUrl, $continue);
 		}
 	}

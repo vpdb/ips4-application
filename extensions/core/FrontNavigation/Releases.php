@@ -71,7 +71,7 @@ class _Releases extends \IPS\core\FrontNavigation\FrontNavigationAbstract
 	 */
 	public function link()
 	{
-		return \IPS\Http\Url::internal("app=vpdb&module=releases&controller=listReleases");
+		return \IPS\Http\Url::internal("app=vpdb&module=releases&controller=browse");
 	}
 
 	/**

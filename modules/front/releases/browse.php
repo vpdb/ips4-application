@@ -11,9 +11,9 @@ if ( !defined( '\IPS\SUITE_UNIQUE_KEY' ) )
 }
 
 /**
- * listReleases
+ * Browse all VPDB releases
  */
-class _listReleases extends \IPS\Dispatcher\Controller
+class _browse extends \IPS\Dispatcher\Controller
 {
 	/**
 	 * Execute

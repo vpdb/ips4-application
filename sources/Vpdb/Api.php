@@ -118,7 +118,7 @@ class _Api
 
 	protected function getUrl($release)
 	{
-		return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=viewRelease&id=' . $release->id . '&gameId=' . $release->game->id);
+		return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=view&releaseId=' . $release->id . '&gameId=' . $release->game->id);
 	}
 
 	protected function releaseToQuery($release)

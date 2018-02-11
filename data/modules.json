@@ -5,7 +5,7 @@
             "protected": 0
         },
         "releases": {
-            "default_controller": "listReleases",
+            "default_controller": "browse",
             "protected": 0
         },
         "core": {

@@ -14,7 +14,7 @@ if (!defined('\IPS\SUITE_UNIQUE_KEY')) {
 /**
  * Retrieves release details from VPDB and displays them.
  */
-class _viewRelease extends \IPS\Content\Controller
+class _view extends \IPS\Content\Controller
 {
 
 	/**
@@ -62,11 +62,11 @@ class _viewRelease extends \IPS\Content\Controller
 		$this->Parsedown = new \Parsedown();
 
 		try {
-			$release = $this->api->getReleaseDetails(\IPS\Request::i()->id, ['thumb_flavor' => 'orientation:fs', 'thumb_format' => 'medium']);
+			$release = $this->api->getReleaseDetails(\IPS\Request::i()->releaseId, ['thumb_flavor' => 'orientation:fs', 'thumb_format' => 'medium']);
 			$release->description = $this->Parsedown->text($release->description);
 
 			// download link
-			$release->download = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=downloadRelease&id=' . $release->id . '&gameId=' . $release->game->id);
+			$release->download = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&releaseId=' . $release->id . '&gameId=' . $release->game->id);
 
 			/* Display */
 			\IPS\Output::i()->title = $release->game->title . ' - ' . $release->name;
