@@ -48,8 +48,7 @@ class _Comment extends \IPS\Content\Comment implements \IPS\Content\EditHistory,
 	 * @brief    Database Column Map
 	 */
 	public static $databaseColumnMap = array(
-		'item' => 'game_release_id',
-		'game' => 'game_id',
+		'item' => 'release_id',
 		'author' => 'author_id',
 		'author_name' => 'author_name',
 		'content' => 'text',
@@ -94,14 +93,14 @@ class _Comment extends \IPS\Content\Comment implements \IPS\Content\EditHistory,
 	 * @param    bool $updateMultitonStoreIfExists Replace current object in multiton store if it already exists there?
 	 * @return    static
 	 */
-	public static function constructFromData($data, $updateMultitonStoreIfExists = TRUE)
-	{
-		$obj = parent::constructFromData($data, $updateMultitonStoreIfExists);
-		if ($data['vpdb_release_comments']['comment_game_release_id']) {
-			$obj->item = new \IPS\vpdb\Release($data['vpdb_release_comments']['comment_game_release_id']);
-		}
-		return $obj;
-	}
+//	public static function constructFromData($data, $updateMultitonStoreIfExists = TRUE)
+//	{
+//		$obj = parent::constructFromData($data, $updateMultitonStoreIfExists);
+//		if ($data['vpdb_release_comments']['comment_game_release_id']) {
+//			$obj->item = new \IPS\vpdb\Release($data['vpdb_release_comments']['comment_game_release_id']);
+//		}
+//		return $obj;
+//	}
 
 	/**
 	 * Get URL for doing stuff
@@ -109,11 +108,11 @@ class _Comment extends \IPS\Content\Comment implements \IPS\Content\EditHistory,
 	 * @param    string|NULL $action Action
 	 * @return    \IPS\Http\Url
 	 */
-	public function url($action = 'find')
-	{
-		$url = parent::url($action)->setQueryString('id', $this->item->getReleaseId())->setQueryString('gameId', $this->item->getGameId());
-		return $url;
-	}
+//	public function url($action = 'find')
+//	{
+//		$url = parent::url($action)->setQueryString('id', $this->item->getReleaseId())->setQueryString('gameId', $this->item->getGameId());
+//		return $url;
+//	}
 
 	/**
 	 * Do stuff after creating (abstracted as comments and reviews need to do different things)
@@ -180,11 +179,11 @@ class _Comment extends \IPS\Content\Comment implements \IPS\Content\EditHistory,
 	 *
 	 * @return    \IPS\Content\Item
 	 */
-	public function item()
-	{
-		if (!$this->item) {
-			$this->item = new \IPS\vpdb\Release($this->mapped('item'));
-		}
-		return $this->item;
-	}
+//	public function item()
+//	{
+//		if (!$this->item) {
+//			$this->item = new \IPS\vpdb\Release($this->mapped('item'));
+//		}
+//		return $this->item;
+//	}
 }

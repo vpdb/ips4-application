@@ -1,4 +1,4 @@
-<ips:template parameters="$release, $game, $comments"/>
+<ips:template parameters="$release, $comments"/>
 
 <div class="ipsPad">
 
@@ -51,8 +51,8 @@
 				<div class="ipsPad">
 
 					<!-- logo -->
-					{{if $game->logo}}
-					<img src="{$game->logo->variations->medium->url}" alt="{$game->title}" class="ipsSpacer_bottom"
+					{{if $release->game->logo}}
+					<img src="{$release->game->logo->variations->medium->url}" alt="{$release->game->title}" class="ipsSpacer_bottom"
 						 style="max-width:100%">
 					{{endif}}
 

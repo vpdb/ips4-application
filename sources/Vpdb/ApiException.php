@@ -7,8 +7,8 @@ namespace IPS\vpdb\Vpdb;
  */
 class _ApiException extends \Exception
 {
-	public function __construct($code, $body)
+	public function __construct(\RestClient $result)
 	{
-		parent::__construct('Error ' . $code . '.');
+		parent::__construct('Error ' . $result->code . '.');
 	}
 }

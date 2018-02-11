@@ -37,6 +37,16 @@ class _Release extends \IPS\Content\Item implements
 	public static $module = 'releases';
 
 	/**
+	 * @brief	Database Table
+	 */
+	public static $databaseTable = 'vpdb_releases';
+
+	/**
+	 * @brief	Database Prefix
+	 */
+	public static $databasePrefix = 'release_';
+
+	/**
 	 * @brief    Comment Class
 	 */
 	public static $commentClass = 'IPS\vpdb\Release\Comment';
@@ -44,10 +54,15 @@ class _Release extends \IPS\Content\Item implements
 	/**
 	 * This is to cheat field accesses.
 	 *
+	 * TODO add views, pinned, featured, locked
 	 * @brief    Database Column Map
 	 */
 	public static $databaseColumnMap = array(
-		'title' => 'title'
+		'title'					=> 'caption',
+		'num_comments'			=> 'comments',
+		'unapproved_comments'	=> 'unapproved_comments',
+		'hidden_comments'		=> 'hidden_comments',
+		'last_comment'			=> 'last_comment',
 	);
 
 	/**
@@ -70,37 +85,21 @@ class _Release extends \IPS\Content\Item implements
 	 * Construct with data from VPDB
 	 * @param $release array|string Release details from VPDB
 	 */
-	public function __construct($release)
-	{
-		if (is_string($release)) {
-			if (\strpos($release, '/') !== false) {
-				list($gameId, $releaseId) = explode("/", $release);
-			} else {
-				$releaseId = $release;
-				$gameId = null;
-			}
-			$this->release = (object)['id' => $releaseId, 'game' => (object)['id' => $gameId]];
-		} else {
-			$this->release = $release;
-			$this->populated = true;
-		}
-	}
-
-	/**
-	 * Load Record
-	 *
-	 * @see        \IPS\Db::build
-	 * @param    int|string $id ID
-	 * @param    string $idField The database column that the $id parameter pertains to (NULL will use static::$databaseColumnId)
-	 * @param    mixed $extraWhereClause Additional where clause(s) (see \IPS\Db::build for details) - if used will cause multiton store to be skipped and a query always ran
-	 * @return    static
-	 * @throws    \InvalidArgumentException
-	 * @throws    \OutOfRangeException
-	 */
-	public static function load($id, $idField = NULL, $extraWhereClause = NULL)
-	{
-		return new \IPS\vpdb\Release($id);
-	}
+//	public function __construct($release)
+//	{
+//		if (is_string($release)) {
+//			if (\strpos($release, '/') !== false) {
+//				list($gameId, $releaseId) = explode("/", $release);
+//			} else {
+//				$releaseId = $release;
+//				$gameId = null;
+//			}
+//			$this->release = (object)['id' => $releaseId, 'game' => (object)['id' => $gameId]];
+//		} else {
+//			$this->release = $release;
+//			$this->populated = true;
+//		}
+//	}
 
 	/**
 	 * Get comments output
@@ -150,35 +149,35 @@ class _Release extends \IPS\Content\Item implements
 
 	public function getReleaseId()
 	{
-		return $this->release->id;
+		return $this->release_id_vpdb;
 	}
 
 	public function getGameId()
 	{
-		return $this->release->game->id;
+		return $this->release_game_id_vpdb;
 	}
 
 	/**
 	 * Needed during comment creation
 	 * @return string
 	 */
-	public function get_id()
-	{
-		// the fucking modlog needs an int as id. let's give it an int.
-		$stack = debug_backtrace();
-		foreach($stack as $trace) {
-			if ($trace['function'] == 'modLog' || $trace['function'] == 'react') {
-				return 0;
-			}
-		}
-		return $this->release->game->id . '/' . $this->release->id;
-	}
+//	public function get_id()
+//	{
+//		// the fucking modlog needs an int as id. let's give it an int.
+//		$stack = debug_backtrace();
+//		foreach($stack as $trace) {
+//			if ($trace['function'] == 'modLog' || $trace['function'] == 'react') {
+//				return 0;
+//			}
+//		}
+//		return $this->release->game->id . '/' . $this->release->id;
+//	}
 
-	/**
-	 * Needed when logging event after deleting
-	 * @return string
-	 */
-	public function get_title() {
-		return $this->getReleaseId();
-	}
+//	/**
+//	 * Needed when logging event after deleting
+//	 * @return string
+//	 */
+//	public function get_title() {
+//		return $this->getReleaseId();
+//	}
 }
