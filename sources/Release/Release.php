@@ -60,10 +60,11 @@ class _Release extends \IPS\Content\Item implements
 	 */
 	public static $databaseColumnMap = array(
 		'title' => 'caption',
+		'author' => 'member_id',
 		'num_comments' => 'comments',
 		'unapproved_comments' => 'unapproved_comments',
 		'hidden_comments' => 'hidden_comments',
-		'last_comment' => 'last_comment',
+		'last_comment' => 'last_comment'
 	);
 
 	protected static $databaseIdFields = array('release_id', 'release_id_vpdb');
@@ -106,6 +107,31 @@ class _Release extends \IPS\Content\Item implements
 		} else {
 			return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=view&releaseId=' . $this->getReleaseId() . '&gameId=' . $this->getGameId());
 		}
+	}
+
+	/**
+	 * Get URL from index data
+	 *
+	 * @param    array $indexData Data from the search index
+	 * @param    array $itemData Basic data about the item. Only includes columns returned by item::basicDataColumns()
+	 * @return    \IPS\Http\Url
+	 */
+	public static function urlFromIndexData($indexData, $itemData)
+	{
+		return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=view&releaseId=' . $itemData['release_id_vpdb'] . '&gameId=' . $itemData['release_game_id_vpdb'], 'front');
+	}
+
+	/**
+	 * Columns needed to query for search result / stream view
+	 *
+	 * @return    array
+	 */
+	public static function basicDataColumns()
+	{
+		$return = parent::basicDataColumns();
+		$return[] = 'release_id_vpdb';
+		$return[] = 'release_game_id_vpdb';
+		return $return;
 	}
 
 	/**f

@@ -165,8 +165,22 @@ class _Api
 		} else {
 			$caption = $release->game->title;
 		}
+		// member IDs
+		$memberId = 0;
+		$otherMembers = [];
+		foreach ($release->authors as $author) {
+			if ($author->user->provider_id) {
+				if (!$memberId) {
+					$memberId = $author->user->provider_id;
+				} else {
+					$otherMembers[] = $author->user->provider_id;
+				}
+			}
+		}
 		return array(
 			'release_id_vpdb' => $release->id,
+			'release_member_id' => $memberId,
+			'release_member_ids' => join(',', $otherMembers),
 			'release_game_id_vpdb' => $release->game->id,
 			'release_game_title' => $release->game->title,
 			'release_game_manufacturer' => $release->game->title,

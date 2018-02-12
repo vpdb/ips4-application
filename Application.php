@@ -58,6 +58,6 @@ class _Application extends \IPS\Application
 	 */
 	protected function get__icon()
 	{
-		return 'circle';
+		return 'database';
 	}
 }

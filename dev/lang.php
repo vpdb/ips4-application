@@ -41,7 +41,8 @@ $lang = array(
 	'sort_release_popularity' => 'Popularity',
 	'vpdb_releases_count' =>  "{# [1:release][?:releases]}",
 
-	// comments
-	'__indefart_vpdb_release_comment' => 'a comment on'
+	// notifications
+	'__indefart_vpdb_release_comment' => 'a comment on',
+	'__indefart_vpdb_release' => 'a release'
 
 );
