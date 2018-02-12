@@ -59,6 +59,9 @@ class _settings extends \IPS\Dispatcher\Controller
 		$form->add(new \IPS\Helpers\Form\Url('vpdb_url_api', \IPS\Settings::i()->vpdb_url_api, TRUE));
 		$form->add(new \IPS\Helpers\Form\Url('vpdb_url_storage', \IPS\Settings::i()->vpdb_url_storage, TRUE));
 
+		$form->addHeader('vpdb_settings_content');
+		$form->add(new \IPS\Helpers\Form\YesNo('all_activity_vpdb_releases', \IPS\Settings::i()->all_activity_vpdb_releases, TRUE));
+
 		if ($values = $form->values()) {
 
 			$api = new \RestClient([ 'base_url' => $values['vpdb_url_api'], 'format' => "json" ]);

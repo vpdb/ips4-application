@@ -18,5 +18,9 @@
     {
         "key": "vpdb_url_storage",
         "default": "https:\/\/storage.vpdb.io"
+    },
+    {
+        "key": "all_activity_vpdb_releases",
+        "default": "true"
     }
 ]

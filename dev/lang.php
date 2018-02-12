@@ -43,6 +43,12 @@ $lang = array(
 
 	// notifications
 	'__indefart_vpdb_release_comment' => 'a comment on',
-	'__indefart_vpdb_release' => 'a release'
+	'__indefart_vpdb_release' => 'a release',
+
+	// streams
+	'vpdb_settings_content' => 'Content',
+	'all_activity_vpdb_releases' => 'Show Releases in Streams',
+	'vpdb_release_stream_content_type' => 'Table Release',
+	'vpdb_user_own_activity_release' => '%s posted <b>%s</b> under table releases',
 
 );

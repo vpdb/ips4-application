@@ -55,11 +55,11 @@ class _Api
 	 * Also updates internal reference to releases.
 	 *
 	 * @param array $sortOptions
+	 * @param bool $loadItems If true, load the corresponding local item.
 	 * @return array First element is the list of releases, second element the total number of releases read from the header
-	 * @throws \IPS\vpdb\Vpdb\ApiException When server returned something we don't expect
 	 * @throws \RestClientException When server communication failed
 	 */
-	public function getReleases(array $sortOptions)
+	public function getReleases(array $sortOptions, $loadItems = false)
 	{
 		$result = $this->client->get("/v1/releases", $sortOptions, $this->getUserHeader());
 		if ($result->info->http_code != 200) {
@@ -79,6 +79,13 @@ class _Api
 		}
 		// update database references TODO cache this
 		\IPS\Db::i()->insert('vpdb_releases', $dbData, true);
+
+		// load items
+		if ($loadItems) {
+			foreach ($releases as $release) {
+				$release->item = \IPS\vpdb\Release::load($release->id, 'release_id_vpdb');
+			}
+		}
 
 		return [$releases, $result->headers->x_list_count];
 	}
@@ -110,8 +117,7 @@ class _Api
 		\IPS\Db::i()->insert('vpdb_releases', $this->releaseToQuery($release), true);
 
 		// load local content item
-		$itemId = \IPS\Db::i()->select('release_id', 'vpdb_releases', array('release_id_vpdb=?', $release->id))->first();
-		$release->item = \IPS\vpdb\Release::load($itemId);
+		$release->item = \IPS\vpdb\Release::load($release->id, 'release_id_vpdb');
 
 		// load local member data
 		foreach ($release->authors as $author) {

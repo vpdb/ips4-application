@@ -1,0 +1,56 @@
+<ips:template parameters="$release, $mainAuthor, $otherAuthors, $view"/>
+
+<li class='ipsStreamItem ipsStreamItem_contentBlock ipsStreamItem_{$view} ipsAreaBackground_reset ipsPad'>
+	<div class='ipsStreamItem_container ipsClearfix'>
+
+		<!-- header with author and title -->
+		<div class='ipsStreamItem_header ipsPhotoPanel ipsPhotoPanel_mini'>
+
+			<!-- avatar -->
+			<span class='ipsStreamItem_contentType' data-ipsTooltip title='{lang="vpdb_release_stream_content_type" ucfirst="true"}'><i class='fa fa-database'></i></span>
+			{{if ($mainAuthor->user->member)}}
+				{template="userPhoto" group="global" app="core" params="$mainAuthor->user->member, ($view !== 'condensed') ? 'mini' : 'tiny'"}
+			{{else}}
+				<span class="ipsUserPhoto ipsUserPhoto_{{if ($view !== 'condensed')}}mini{{else}}tiny{{endif}}">
+					<img src="//www.gravatar.com/avatar/{$mainAuthor->user->gravatar_id}?default=retro">
+				</span>
+			{{endif}}
+
+			<!-- title -->
+			<div>
+				<h2 class='ipsType_reset ipsContained_container ipsStreamItem_title ipsType_break {{if $view == 'condensed'}}ipsStreamItem_titleSmall{{endif}}'>
+					<span class='ipsContained ipsType_break'><a href='{$release->url}' data-linkType="link" data-searchable>
+						{$release->game->title} {{if ($release->game->manufacturer && $release->game->year)}} ({$release->game->manufacturer} {$release->game->year}){{endif}}
+					</a></span>
+				</h2>
+				<p class='ipsType_reset ipsStreamItem_status ipsType_blendLinks'>
+					{lang="vpdb_user_own_activity_release" htmlsprintf="$mainAuthor->user->member ? $mainAuthor->user->member->name : $mainAuthor->user->username, $release->name"}
+				</p>
+			</div>
+		</div>
+
+
+		{{if $view !== 'condensed'}}
+
+			<!-- body --
+			<div class='ipsStreamItem_snippet ipsType_break'>
+				{$snippet|raw}
+			</div-->
+
+
+			<!-- footer -->
+			<ul class='ipsList_inline ipsStreamItem_meta'>
+				<li class='ipsType_light ipsType_medium'>
+					<a href='{$release->url}' class='ipsType_blendLinks'><i class='fa fa-clock-o'></i> {datetime="strtotime($release->created_at)"}</a>
+				</li>
+				{{if ($release->item->release_comments > -1)}}
+					<li class='ipsType_light ipsType_medium'>
+						<a href='$release->url' class='ipsType_blendLinks'>
+						<i class='fa fa-comment'></i> {lang="num_comments" pluralize="$release->item->release_comments"}
+						</a>
+					</li>
+				{{endif}}
+			</ul>
+		{{endif}}
+	</div>
+</li>
