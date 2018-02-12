@@ -76,6 +76,11 @@ class _Release extends \IPS\Content\Item implements
 	public static $title = 'vpdb_release';
 
 	/**
+	 * @brief	Icon
+	 */
+	public static $icon = 'database';
+
+	/**
 	 * @var array Release fetched from VPDB
 	 */
 	public $release;

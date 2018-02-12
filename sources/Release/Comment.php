@@ -87,24 +87,6 @@ class _Comment extends \IPS\Content\Comment implements \IPS\Content\EditHistory,
 	public $item;
 
 	/**
-	 * Do stuff after creating (abstracted as comments and reviews need to do different things)
-	 *
-	 * @return    void
-	 */
-	public function postCreate()
-	{
-//		parent::postCreate();
-//
-//		$item	= $this->item();
-//
-//		if( $item->album_id )
-//		{
-//			\IPS\gallery\Album::load( $item->album_id )->setLastComment();
-//			\IPS\gallery\Album::load( $item->album_id )->save();
-//		}
-	}
-
-	/**
 	 * Get snippet HTML for search result display
 	 *
 	 * @param    array $indexData Data from the search index
