@@ -9,6 +9,9 @@ include_once(\IPS\ROOT_PATH . '/applications/vpdb/sources/RestClient.php');
  */
 class _Api
 {
+	/**
+	 * @var _Api
+	 */
 	protected static $instance;
 
 	/**
@@ -27,6 +30,23 @@ class _Api
 			'format' => 'json',
 			'headers' => ['Authorization' => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key],
 		]);
+	}
+
+	/**
+	 * Returns the VPDB profile of currently loged IPS user.
+	 *
+	 * @return mixed|null Profile or null if user not registered at VPDB. All other errors throw an exception.
+	 * @throws \RestClientException
+	 */
+	public function getUserProfile() {
+		$result = $this->client->get("/v1/user", [], $this->getUserHeader());
+		if ($result->info->http_code == 400 && preg_match('/no user with id "\d+" for provider/i', $result->decode_response()->error)) {
+			return null;
+		}
+		if ($result->info->http_code != 200) {
+			throw new \IPS\vpdb\Vpdb\ApiException($result);
+		}
+		return $result->decode_response();
 	}
 
 	/**
@@ -99,10 +119,27 @@ class _Api
 				$author->user->member = \IPS\Member::load($author->user->provider_id);
 			}
 		}
-
 		return $release;
 	}
 
+	/**
+	 * Returns all ROMs of a given game
+	 * @param $gameId string Game ID
+	 * @return mixed
+	 * @throws \RestClientException
+	 */
+	public function getRoms($gameId) {
+		$result = $this->client->get('/v1/games/' . $gameId . '/roms', [], $this->getUserHeader());
+		if ($result->info->http_code != 200) {
+			throw new \IPS\vpdb\Vpdb\ApiException($result);
+		}
+		return $result->decode_response();
+	}
+
+	/**
+	 * Returns the singleton instance of this class.
+	 * @return _Api
+	 */
 	public static function getInstance()
 	{
 		if (!self::$instance) {
@@ -137,4 +174,25 @@ class _Api
 			'release_caption' => $caption,
 		);
 	}
+
+	public static $flavors = array(
+		'orientation' => array(
+			'header' => 'Orientation',
+			'name' => 'orientation',
+			'values' => array(
+				'ws' => array('name' => 'Desktop', 'other' => 'Landscape', 'value' => 'ws', 'short' => 'DT'),
+				'fs' => array('name' => 'Cabinet', 'other' => 'Portrait', 'value' => 'fs', 'short' => 'FS'),
+				'any' => array('name' => 'Universal', 'other' => 'Any Orientation', 'value' => 'any', 'short' => 'Universal')
+			)
+		),
+		'lighting' => array(
+			'header' => 'Lighting',
+			'name' => 'lighting',
+			'values' => array(
+				'night' => array('name' => 'Night', 'other' => 'Dark Playfield', 'value' => 'night'),
+				'day' => array('name' => 'Day', 'other' => 'Illuminated Playfield', 'value' => 'day'),
+				'any' => array('name' => 'Universal', 'other' => 'Customizable', 'value' => 'any')
+			)
+		)
+	);
 }

@@ -1,10 +1,10 @@
-<ips:template parameters="$release, $game, $roms, $gameMedia, $flavors, $action"/>
+<ips:template parameters="$release, $roms, $gameMedia, $flavors, $action"/>
 
 <div class="ipsPad">
 	<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
 		<h2 class="ipsType_sectionHead">Download <b>$release->name</b> of</h2>
 		<br>
-		<h1 class="ipsType_pageTitle"><b>{$game->title}</b></h1>
+		<h1 class="ipsType_pageTitle"><b>{$release->game->title}</b></h1>
 		<h2 class="ipsType_sectionHead">&nbsp;by {{foreach $release->authors as $i => $author}}{{if ($i > 0 && $i < count($release->authors) - 1)}}, {{endif}}{{if ($i == count($release->authors) - 1)}} and {{endif}}
 			{{if ($author->user->provider_id)}}{$author->user->member->link()|raw}{{else}}{$author->user->name}{{endif}}{{endforeach}}
 		</h2>

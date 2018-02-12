@@ -52,7 +52,8 @@ class _Release extends \IPS\Content\Item implements
 	public static $commentClass = 'IPS\vpdb\Release\Comment';
 
 	/**
-	 * This is to cheat field accesses.
+	 * Added what I thought would be useful, though the comments fields don't
+	 * seem to be updated (TODO)
 	 *
 	 * TODO add views, pinned, featured, locked
 	 * @brief    Database Column Map
@@ -120,8 +121,13 @@ class _Release extends \IPS\Content\Item implements
 	}
 
 	/**
-	 * Load and check permissions
+	 * This is overridden because the controller hard-codes where the parameter
+	 * is retrieved ("id"), while here we need a) another parameter ("releaseId")
+	 * and b) another ID field ("release_id_vpdb").
 	 *
+	 * God knows where else this is used, so we check if passed ID is null first.
+	 *
+	 * @see \IPS\Content\_Controller::__call
 	 * @return    static
 	 * @throws    \OutOfRangeException
 	 */
