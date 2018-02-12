@@ -24,10 +24,17 @@
 {
 	"topLevel": "vpdb",
 	"pages": {
-		"vpdb": {
-			"friendly": "",
-			"real": "app=vpdb&module=vpdb&controller=home",
-			"alias": "vpdb"
+		"vpdb_releases": {
+			"real": "app=vpdb&module=releases&controller=browse",
+			"friendly": "releases"
+		},
+		"vpdb_release_download": {
+			"real": "app=vpdb&module=releases&controller=download",
+			"friendly": "games/{@gameId}/releases/{@releaseId}/download"
+		},
+		"vpdb_release_view": {
+			"real": "app=vpdb&module=releases&controller=view",
+			"friendly": "games/{@gameId}/releases/{@releaseId}"
 		}
 	}
 }
