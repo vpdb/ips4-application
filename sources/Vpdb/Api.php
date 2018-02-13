@@ -54,14 +54,15 @@ class _Api
 	 *
 	 * Also updates internal reference to releases.
 	 *
-	 * @param array $sortOptions
+	 * @param array $queryParams
 	 * @param bool $loadItems If true, load the corresponding local item.
+	 * @param bool $loadMembers If false, don't load member data if available
 	 * @return array First element is the list of releases, second element the total number of releases read from the header
 	 * @throws \RestClientException When server communication failed
 	 */
-	public function getReleases(array $sortOptions, $loadItems = false)
+	public function getReleases(array $queryParams, $loadItems = false, $loadMembers = true)
 	{
-		$result = $this->client->get("/v1/releases", $sortOptions, $this->getUserHeader());
+		$result = $this->client->get("/v1/releases", $queryParams, $this->getUserHeader());
 		if ($result->info->http_code != 200) {
 			throw new \IPS\vpdb\Vpdb\ApiException($result);
 		}
@@ -71,7 +72,9 @@ class _Api
 		foreach ($releases as $release) {
 			$dbData[] = $this->releaseToQuery($release);
 			$release->url = $this->getUrl($release);
-			$this->addMembers($release);
+			if ($loadMembers) {
+				$this->addMembers($release);
+			}
 		}
 		// update database references TODO cache this
 		\IPS\Db::i()->insert('vpdb_releases', $dbData, true);

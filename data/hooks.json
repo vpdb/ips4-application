@@ -1,1 +1,6 @@
-[]
+{
+    "Member": {
+        "type": "C",
+        "class": "\\IPS\\Member"
+    }
+}
