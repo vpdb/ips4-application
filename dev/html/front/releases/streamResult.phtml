@@ -43,10 +43,10 @@
 				<li class='ipsType_light ipsType_medium'>
 					<a href='{$release->url}' class='ipsType_blendLinks'><i class='fa fa-clock-o'></i> {datetime="strtotime($release->created_at)"}</a>
 				</li>
-				{{if ($release->item->release_comments > -1)}}
+				{{if $release->item->comments > -1}}
 					<li class='ipsType_light ipsType_medium'>
 						<a href='$release->url' class='ipsType_blendLinks'>
-						<i class='fa fa-comment'></i> {lang="num_comments" pluralize="$release->item->release_comments"}
+						<i class='fa fa-comment'></i> {lang="num_comments" pluralize="$release->item->comments"}
 						</a>
 					</li>
 				{{endif}}
