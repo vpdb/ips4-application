@@ -264,6 +264,159 @@ class _Release extends \IPS\Content\Item implements
 	}
 
 	/**
+	 * Remove Reaction
+	 *
+	 * @param    \IPS\Member|NULL        The member, or NULL
+	 * @return    void
+	 */
+	public function removeReaction(\IPS\Member $member = NULL)
+	{
+		$member = $member ?: \IPS\Member::loggedIn();
+
+		try {
+			try {
+				$idColumn = static::$databaseColumnId;
+
+				$where = $this->getReactionWhereClause(NULL, FALSE);
+				$where[] = array('member_id=?', $member->member_id);
+				$reps = \IPS\Db::i()->select('*', 'core_reputation_index', $where);
+			} catch (\UnderflowException $e) {
+				throw new \OutOfRangeException;
+			}
+
+			foreach ($reps as $rep) {
+				$memberReceived = \IPS\Member::load($rep['member_received']);
+				$reaction = \IPS\Content\Reaction::load($rep['reaction']);
+
+				if ($memberReceived->member_id) {
+					$memberReceived->pp_reputation_points = $memberReceived->pp_reputation_points - $reaction->value;
+					$memberReceived->save();
+				}
+				\IPS\Db::i()->delete('core_reputation_index', array("id=?", $rep['id']));
+			}
+		} catch (\OutOfRangeException $e) {
+			throw new \DomainException;
+		}
+	}
+
+	/**
+	 * Reactions
+	 *
+	 * @param    array|NULL $mixInData If the data is already know, it can be passed here to be manually set
+	 * @return    array
+	 */
+	public function reactions()
+	{
+		if ($this->_reactionCount === NULL) {
+			$this->_reactionCount = 0;
+		}
+
+		if ($this->_reactions === NULL) {
+			$idColumn = static::$databaseColumnId;
+			$this->_reactions = array();
+
+			if (is_array($this->reputation)) {
+				foreach ($this->reputation AS $memberId => $reactionId) {
+					try {
+						$this->_reactionCount += \IPS\Content\Reaction::load($reactionId)->value;
+						$this->_reactions[$memberId][] = $reactionId;
+					} catch (\OutOfRangeException $e) {
+					}
+				}
+			} else {
+				foreach (\IPS\Db::i()->select('member_id, rep_rating', 'core_reputation_index', $this->getReactionWhereClause(), null, null, array('member_id', 'rep_rating'))->join('core_reactions', 'reaction=reaction_id') AS $reaction) {
+					$this->_reactions[$reaction['member_id']][] = $reaction['reaction'];
+					$this->_reactionCount += $reaction['rep_rating'];
+				}
+			}
+		}
+
+		return $this->_reactions;
+	}
+
+	/**
+	 * Reaction Table
+	 *
+	 * @return    \IPS\Helpers\Table\Db
+	 */
+	public function reactionTable($reaction = NULL)
+	{
+		if (!\IPS\Member::loggedIn()->group['gbw_view_reps'] or !$this->canView()) {
+			throw new \DomainException;
+		}
+		$idColumn = static::$databaseColumnId;
+
+		//---- CHANGE START
+		$group = array('member_id', 'reaction');
+		$table = new \IPS\Helpers\Table\Db('core_reputation_index', $this->url('showReactions'), $this->getReactionWhereClause($reaction), $group);
+		$table->onlySelected = array('member_id', 'reaction', 'rep_date');
+		//---- CHANGE END
+		$table->sortBy = 'rep_date';
+		$table->sortDirection = 'desc';
+		$table->tableTemplate = array(\IPS\Theme::i()->getTemplate('global', 'core', 'front'), 'reactionLogTable');
+		$table->rowsTemplate = array(\IPS\Theme::i()->getTemplate('global', 'core', 'front'), 'reactionLog');
+		$table->joins = array(array('from' => 'core_reactions', 'where' => 'reaction=reaction_id'));
+
+		$table->rowButtons = function ($row) {
+			return array(
+				'delete' => array(
+					'icon' => 'times-circle',
+					'title' => 'delete',
+					'link' => $this->url('unreact')->csrf()->setQueryString(array('member' => $row['member_id'])),
+					'data' => array('confirm' => TRUE)
+				)
+			);
+		};
+
+		return $table;
+	}
+
+	/**
+	 * React Blurb
+	 *
+	 * @return    string
+	 */
+	public function reactBlurb()
+	{
+		if ($this->reactBlurb === NULL) {
+			$this->reactBlurb = array();
+
+			if (count($this->reactions())) {
+				$idColumn = static::$databaseColumnId;
+				foreach (\IPS\Db::i()->select('member_id, reaction', 'core_reputation_index', $this->getReactionWhereClause(), null, null, array('member_id', 'reaction'))->join('core_reactions', 'reaction=reaction_id') AS $rep) {
+					if (!isset($this->reactBlurb[$rep['reaction']])) {
+						$this->reactBlurb[$rep['reaction']] = 0;
+					}
+
+					$this->reactBlurb[$rep['reaction']]++;
+				}
+
+				/* Error suppressor for https://bugs.php.net/bug.php?id=50688 */
+				@uksort($this->reactBlurb, function ($a, $b) {
+					try {
+						$a = \IPS\Content\Reaction::load($a);
+						$b = \IPS\Content\Reaction::load($b);
+					} /* One of the reactions does not exist */
+					catch (\OutOfRangeException $e) {
+						return 1;
+					}
+
+					if ($a->position < $b->position) {
+						return -1;
+					} elseif ($a->position == $b->position) {
+						return 0;
+					} else {
+						return 1;
+					}
+				});
+			} else {
+				$this->reactBlurb = array();
+			}
+		}
+		return $this->reactBlurb;
+	}
+
+	/**
 	 * Who Reacted
 	 *
 	 * @param    bool|NULL    Use like text instead? NULL to automatically determine
@@ -353,42 +506,6 @@ class _Release extends \IPS\Content\Item implements
 		return $this->likeBlurb;
 	}
 
-	/**
-	 * Reaction Table
-	 *
-	 * @return    \IPS\Helpers\Table\Db
-	 */
-	public function reactionTable($reaction = NULL)
-	{
-		if (!\IPS\Member::loggedIn()->group['gbw_view_reps'] or !$this->canView()) {
-			throw new \DomainException;
-		}
-		$idColumn = static::$databaseColumnId;
-
-		//---- CHANGE START
-		$group = array('member_id', 'reaction');
-		$table = new \IPS\Helpers\Table\Db('core_reputation_index', $this->url('showReactions'), $this->getReactionWhereClause($reaction), $group);
-		$table->onlySelected = array('member_id', 'reaction', 'rep_date');
-		//---- CHANGE END
-		$table->sortBy = 'rep_date';
-		$table->sortDirection = 'desc';
-		$table->tableTemplate = array(\IPS\Theme::i()->getTemplate('global', 'core', 'front'), 'reactionLogTable');
-		$table->rowsTemplate = array(\IPS\Theme::i()->getTemplate('global', 'core', 'front'), 'reactionLog');
-		$table->joins = array(array('from' => 'core_reactions', 'where' => 'reaction=reaction_id'));
-
-		$table->rowButtons = function ($row) {
-			return array(
-				'delete' => array(
-					'icon' => 'times-circle',
-					'title' => 'delete',
-					'link' => $this->url('unreact')->csrf()->setQueryString(array('member' => $row['member_id'])),
-					'data' => array('confirm' => TRUE)
-				)
-			);
-		};
-
-		return $table;
-	}
 
 	/**
 	 * Fetch Meta Data
