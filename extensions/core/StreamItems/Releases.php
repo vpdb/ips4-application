@@ -48,11 +48,14 @@ class _Releases
 	{
 		$extraItems = [];
 		try {
-			$releases = $this->api->getReleases(['sort' => '-created_at', 'thumb_format' => 'square'], true)[0];
+			if ($author && $author->member_id) {
+				$releases = $this->api->getReleases(['sort' => '-created_at', 'thumb_format' => 'square', 'provider_user' => $author->member_id], true)[0];
 
-			foreach ($releases as $release) {
-				$extraItems[] = new \IPS\vpdb\Release\StreamResult($release, $author);
+				foreach ($releases as $release) {
+					$extraItems[] = new \IPS\vpdb\Release\StreamResult($release, $author);
+				}
 			}
+
 		} catch (\IPS\vpdb\Vpdb\ApiException $e) {
 		} catch (\RestClientException $e) {
 		}

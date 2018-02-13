@@ -44,6 +44,7 @@ $lang = array(
 	// notifications
 	'__indefart_vpdb_release_comment' => 'a comment on',
 	'__indefart_vpdb_release' => 'a release',
+	'__defart_vpdb_release' => 'release',
 
 	// streams
 	'vpdb_settings_content' => 'Content',
