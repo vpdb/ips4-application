@@ -26,6 +26,8 @@ class _Release extends \IPS\Content\Item implements
 	\IPS\Content\MetaData,
 	\IPS\Content\Lockable
 {
+	use \IPS\Content\Reactable;
+
 	/**
 	 * @brief    Application
 	 */
@@ -76,7 +78,7 @@ class _Release extends \IPS\Content\Item implements
 	public static $title = 'vpdb_release';
 
 	/**
-	 * @brief	Icon
+	 * @brief    Icon
 	 */
 	public static $icon = 'database';
 
@@ -89,6 +91,19 @@ class _Release extends \IPS\Content\Item implements
 	 * @var bool If false, only game and release IDs are set.
 	 */
 	protected $populated = false;
+
+	/**
+	 * @var \IPS\vpdb\Vpdb\_Api
+	 */
+	protected $api;
+
+	/**
+	 * Release constructor.
+	 */
+	public function __construct()
+	{
+		$this->api = \IPS\vpdb\Vpdb\Api::getInstance();
+	}
 
 	/**
 	 * Get comments output
@@ -139,7 +154,243 @@ class _Release extends \IPS\Content\Item implements
 		return $return;
 	}
 
-	/**f
+	/**
+	 * Reaction Type
+	 *
+	 * @return    string
+	 */
+	public static function reactionType()
+	{
+		return 'release_id';
+	}
+
+	/**
+	 * React
+	 *
+	 * @param    \IPS\core\Reaction $reaction The reaction
+	 * @param    \IPS\Member $member The member reacting, or NULL
+	 * @return    void
+	 * @throws    \DomainException
+	 */
+	public function react(\IPS\Content\Reaction $reaction, \IPS\Member $member = NULL)
+	{
+		/* Did we pass a member? */
+		$member = $member ?: \IPS\Member::loggedIn();
+
+		// Figure out the owner. Might need to refetch
+		if (!$this->release) {
+			try {
+				$this->release = $this->api->getReleaseDetails($this->getReleaseId(), ['ignore_count' => '1']);
+			} catch (\RestClientException $e) {
+				return;
+			}
+		}
+
+		foreach ($this->release->authors as $author) {
+			$this->reactWithOwner($reaction, $member, $author, count($this->release->authors));
+		}
+	}
+
+	protected function reactWithOwner(\IPS\Content\Reaction $reaction, \IPS\Member $member, $author, $numAuthors)
+	{
+		// can't react to members that aren't on IPS
+		if (!$author->user->member) {
+			return;
+		}
+
+		$owner = $author->user->member;
+
+		/* Can we react? */
+		if (!$this->canView($member) or !$this->canReact($member) or !$reaction->enabled) {
+			throw new \DomainException('cannot_react');
+		}
+
+		/* Have we hit our limit? Also, why 999 for unlimited? */
+		if ($member->group['g_rep_max_positive'] !== -1) {
+			$count = \IPS\Db::i()->select('COUNT(*)', 'core_reputation_index', array('member_id=? AND rep_date>?', $member->member_id, \IPS\DateTime::create()->sub(new \DateInterval('P1D'))->getTimestamp()))->first();
+			if (($count + $numAuthors) > $member->group['g_rep_max_positive']) {
+				throw new \DomainException(\IPS\Member::loggedIn()->language()->addToStack('react_daily_exceeded', FALSE, array('sprintf' => array($member->group['g_rep_max_positive']))));
+			}
+		}
+
+		/* Figure out our app - we do it this way as content items and nodes will always have a lowercase namespace for the app, so if the match below fails, then 'core' can be assumed */
+		$app = explode('\\', get_class($this));
+		if (\strtolower($app[1]) === $app[1]) {
+			$app = $app[1];
+		} else {
+			$app = 'core';
+		}
+
+		/* If this is a comment, we need the parent items ID */
+		$itemId = 0;
+		if ($this instanceof \IPS\Content\Comment) {
+			$item = $this->item();
+			$itemIdColumn = $item::$databaseColumnId;
+			$itemId = $item->$itemIdColumn;
+		}
+
+		/* Have we already reacted? */
+//		if ($this->reacted($member)) {
+//			$this->removeReaction($member);
+//		}
+
+		/* Actually insert it */
+		$idColumn = static::$databaseColumnId;
+		\IPS\Db::i()->insert('core_reputation_index', array(
+			'member_id' => $member->member_id,
+			'app' => $app,
+			'type' => static::reactionType(),
+			'type_id' => $this->$idColumn,
+			'rep_date' => \IPS\DateTime::create()->getTimestamp(),
+			'rep_rating' => $reaction->value,
+			'member_received' => $owner->member_id,
+			'rep_class' => static::reactionClass(),
+			'class_type_id_hash' => md5(static::reactionClass() . ':' . $this->$idColumn),
+			'item_id' => $itemId,
+			'reaction' => $reaction->id
+		));
+
+		/* Send the notification */
+		if ($this->author()->member_id AND $this->author() != \IPS\Member::loggedIn() AND $this->canView($owner)) {
+			$notification = new \IPS\Notification(\IPS\Application::load('core'), 'new_likes', $this, array($this, $member), array(), TRUE, \IPS\Content\Reaction::isLikeMode() ? NULL : 'notification_new_react');
+			$notification->recipients->attach($owner);
+			$notification->send();
+		}
+
+		if ($owner->member_id) {
+			$owner->pp_reputation_points += $reaction->value;
+			$owner->save();
+		}
+	}
+
+	/**
+	 * Who Reacted
+	 *
+	 * @param    bool|NULL    Use like text instead? NULL to automatically determine
+	 * @return    string
+	 */
+	public function whoReacted($isLike = NULL)
+	{
+		if ($isLike === NULL) {
+			$isLike = \IPS\Content\Reaction::isLikeMode();
+		}
+
+		if ($this->likeBlurb === NULL) {
+			$langPrefix = 'react_';
+			if ($isLike) {
+				$langPrefix = 'like_';
+			}
+
+			/* Did anyone like it? */
+			$numberOfLikes = $this->reactionCount(); # int
+			if ($numberOfLikes) {
+				/* Is it just us? */
+				$userLiked = ($this->reacted());
+				if ($userLiked and $numberOfLikes < 2) {
+					$this->likeBlurb = \IPS\Member::loggedIn()->language()->addToStack("{$langPrefix}blurb_just_you");
+				} /* Nope, we need to display a number... */
+				else {
+					$peopleToDisplayInMainView = array();
+					$andXOthers = $numberOfLikes;
+
+					/* If the user liked, we always show "You" first */
+					if ($userLiked) {
+						$peopleToDisplayInMainView[] = \IPS\Member::loggedIn()->language()->addToStack("{$langPrefix}blurb_you_and_others");
+						$andXOthers--;
+					}
+
+					$peopleToDisplayInSecondaryView = array();
+
+					/* Some random names */
+					$idColumn = static::$databaseColumnId;
+					$i = 0;
+					$peopleToDisplayInSecondaryView = array();
+					/* Figure out our app - we do it this way as content items and nodes will always have a lowercase namespace for the app, so if the match below fails, then 'core' can be assumed */
+					$app = explode('\\', static::reactionClass());
+					if (\strtolower($app[1]) === $app[1]) {
+						$app = $app[1];
+					} else {
+						$app = 'core';
+					}
+					$where = $this->getReactionWhereClause();
+					$where[] = array('member_id!=?', \IPS\Member::loggedIn()->member_id ?: 0);
+
+					// since we can have multiple entries per entity (>1 author per
+					// release), group by member ID when returning people to display.
+					// we unfortunately can't override this more concisely, so here are
+					// three lines changed.
+					//---- CHANGE START
+					$group = array('member_id', 'app');
+					$reps = \IPS\Db::i()->select('member_id, app', 'core_reputation_index', $where, 'RAND()', $userLiked ? 17 : 18, $group)->join('core_reactions', 'reaction=reaction_id');
+					foreach ($reps as $rep) //---- CHANGE END
+					{
+						if ($i < ($userLiked ? 2 : 3)) {
+							$peopleToDisplayInMainView[] = htmlspecialchars(\IPS\Member::load($rep['member_id'])->name, ENT_QUOTES | \IPS\HTMLENTITIES, 'UTF-8', FALSE);
+							$andXOthers--;
+						} else {
+							$peopleToDisplayInSecondaryView[] = htmlspecialchars(\IPS\Member::load($rep['member_id'])->name, ENT_QUOTES | \IPS\HTMLENTITIES, 'UTF-8', FALSE);
+						}
+						$i++;
+					}
+
+					/* If there's people to display in the secondary view, add that */
+					if ($peopleToDisplayInSecondaryView) {
+						if (count($peopleToDisplayInSecondaryView) < $andXOthers) {
+							$peopleToDisplayInSecondaryView[] = \IPS\Member::loggedIn()->language()->addToStack("{$langPrefix}blurb_others_secondary", FALSE, array('pluralize' => array($andXOthers - count($peopleToDisplayInSecondaryView))));
+						}
+						$peopleToDisplayInMainView[] = \IPS\Theme::i()->getTemplate('global', 'core', 'front')->reputationOthers($this->url('showReactions'), \IPS\Member::loggedIn()->language()->addToStack("{$langPrefix}blurb_others", FALSE, array('pluralize' => array($andXOthers))), json_encode($peopleToDisplayInSecondaryView));
+					}
+
+					/* Put it all together */
+					$this->likeBlurb = \IPS\Member::loggedIn()->language()->addToStack("{$langPrefix}blurb", FALSE, array('pluralize' => array($numberOfLikes), 'htmlsprintf' => array(\IPS\Member::loggedIn()->language()->formatList($peopleToDisplayInMainView))));
+				}
+
+			} /* Nobody liked it - show nothing */
+			else {
+				$this->likeBlurb = '';
+			}
+		}
+		return $this->likeBlurb;
+	}
+
+	/**
+	 * Reaction Table
+	 *
+	 * @return    \IPS\Helpers\Table\Db
+	 */
+	public function reactionTable($reaction = NULL)
+	{
+		if (!\IPS\Member::loggedIn()->group['gbw_view_reps'] or !$this->canView()) {
+			throw new \DomainException;
+		}
+		$idColumn = static::$databaseColumnId;
+
+		//---- CHANGE START
+		$group = array('member_id', 'reaction');
+		$table = new \IPS\Helpers\Table\Db('core_reputation_index', $this->url('showReactions'), $this->getReactionWhereClause($reaction), $group);
+		$table->onlySelected = array('member_id', 'reaction', 'rep_date');
+		//---- CHANGE END
+		$table->sortBy = 'rep_date';
+		$table->sortDirection = 'desc';
+		$table->tableTemplate = array(\IPS\Theme::i()->getTemplate('global', 'core', 'front'), 'reactionLogTable');
+		$table->rowsTemplate = array(\IPS\Theme::i()->getTemplate('global', 'core', 'front'), 'reactionLog');
+		$table->joins = array(array('from' => 'core_reactions', 'where' => 'reaction=reaction_id'));
+
+		$table->rowButtons = function ($row) {
+			return array(
+				'delete' => array(
+					'icon' => 'times-circle',
+					'title' => 'delete',
+					'link' => $this->url('unreact')->csrf()->setQueryString(array('member' => $row['member_id'])),
+					'data' => array('confirm' => TRUE)
+				)
+			);
+		};
+
+		return $table;
+	}
+
+	/**
 	 * Fetch Meta Data
 	 *
 	 * @return    array

@@ -71,11 +71,7 @@ class _Api
 		foreach ($releases as $release) {
 			$dbData[] = $this->releaseToQuery($release);
 			$release->url = $this->getUrl($release);
-			foreach ($release->authors as $author) {
-				if ($author->user->provider_id) {
-					$author->user->member = \IPS\Member::load($author->user->provider_id);
-				}
-			}
+			$this->addMembers($release);
 		}
 		// update database references TODO cache this
 		\IPS\Db::i()->insert('vpdb_releases', $dbData, true);
@@ -120,11 +116,8 @@ class _Api
 		$release->item = \IPS\vpdb\Release::load($release->id, 'release_id_vpdb');
 
 		// load local member data
-		foreach ($release->authors as $author) {
-			if ($author->user->provider_id) {
-				$author->user->member = \IPS\Member::load($author->user->provider_id);
-			}
-		}
+		$this->addMembers($release);
+
 		return $release;
 	}
 
@@ -162,6 +155,15 @@ class _Api
 	protected function getUrl($release)
 	{
 		return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=view&releaseId=' . $release->id . '&gameId=' . $release->game->id);
+	}
+
+	protected function addMembers($release) {
+		foreach ($release->authors as $author) {
+			if ($author->user->provider_id) {
+				$release->hasMemberAuthors = true;
+				$author->user->member = \IPS\Member::load($author->user->provider_id);
+			}
+		}
 	}
 
 	protected function releaseToQuery($release)
