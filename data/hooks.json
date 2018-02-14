@@ -2,5 +2,9 @@
     "Member": {
         "type": "C",
         "class": "\\IPS\\Member"
+    },
+    "Index": {
+        "type": "C",
+        "class": "\\IPS\\Content\\Search\\Mysql\\Index"
     }
 }
