@@ -1,0 +1,34 @@
+<ips:template parameters="$indexData, $itemData, $image, $url, $reviewRating, $condensed" />
+{{if $condensed}}
+	{{if $image}}
+		<span class='ipsThumb_bg ipsThumb_small ipsPos_left' style='background-image: url("{file="$image" extension="gallery_Images"}")'>
+			<img src='{file="$image"}' alt='' class="">
+		</span>
+	{{else}}
+		<span class='ipsNoThumb ipsThumb_small ipsPos_left'></span>
+	{{endif}}
+{{else}}
+	<div class='ipsColumns ipsColumns_collapsePhone ipsColumns_noSpacing'>
+		<div class='ipsColumn ipsColumn_narrow ipsType_center'>
+			<a href='{$url}' title='{lang="view_this_release"}'>
+				{{if $image}}
+					<img src='{file="$image"}' alt='' class="ipsImage ipsStream_thumbnail ipsStream_thumbnailSmall">
+				{{else}}
+					<div class='ipsNoThumb_medium ipsNoThumb'></div>
+				{{endif}}
+			</a>
+		</div>
+		<div class='ipsColumn ipsColumn_fluid'>
+			<div class='ipsStream_comment ipsPad'>
+				{{if $reviewRating !== NULL}}
+					{template="rating" app="core" params="'medium', $reviewRating" group="global"}
+				{{endif}}
+				{{if trim( $indexData['index_content'] ) !== ''}}
+					<div class='ipsType_richText ipsType_break ipsType_medium' {{if !( \IPS\Dispatcher::i()->application->directory == 'core' and \IPS\Dispatcher::i()->module and \IPS\Dispatcher::i()->module->key == 'search' )}}data-ipsTruncate data-ipsTruncate-type='remove' data-ipsTruncate-size='3 lines' data-ipsTruncate-watch='false'{{else}}data-searchable data-findTerm{{endif}}>
+						{$indexData['index_content']|raw}
+					</div>
+				{{endif}}
+			</div>
+		</div>
+	</div>
+{{endif}}

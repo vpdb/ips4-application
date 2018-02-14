@@ -71,7 +71,6 @@ class _Storage
 		}
 	}
 
-
 	/**
 	 * Returns the singleton instance of this class.
 	 * @return _Storage
@@ -83,6 +82,19 @@ class _Storage
 		}
 		return self::$instance;
 	}
+
+	/**
+	 * Returns an URL that points to the VPDB storage location which then
+	 * redirects to the requested thumb.
+	 *
+	 * @param string $releaseId Release ID at VPDB
+	 * @param string $format Thumb format
+	 * @return string Absolute URL to the thumb redirection
+	 */
+	public static function thumb($releaseId, $format) {
+		return \IPS\Settings::i()->vpdb_url_storage . '/v1/releases/' . $releaseId . '/thumb?format=' . $format;
+	}
+
 
 	protected function getUserHeader($headers = [])
 	{

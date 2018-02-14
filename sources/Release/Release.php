@@ -155,6 +155,26 @@ class _Release extends \IPS\Content\Item implements
 	}
 
 	/**
+	 * Return the language string key to use in search results
+	 *
+	 * @note Normally we show "(user) posted a (thing) in (area)" but sometimes this may not be accurate, so this is abstracted to allow
+	 *    content classes the ability to override
+	 * @param    array $authorData Author data
+	 * @param    array $articles Articles language strings
+	 * @param    array $indexData Search index data
+	 * @param    array $itemData Data about the item
+	 * @return    string
+	 */
+	public static function searchResultSummaryLanguage($authorData, $articles, $indexData, $itemData)
+	{
+		if (in_array('IPS\Content\Comment', class_parents($indexData['index_class']))) {
+			return \IPS\Member::loggedIn()->language()->addToStack("vpdb_user_activity_comment", FALSE, array('sprintf' => array($authorData['name'], $articles['indefinite'])));
+		} else {
+			return parent::searchResultSummaryLanguage($authorData, $articles, $indexData, $itemData);
+		}
+	}
+
+	/**
 	 * Reaction Type
 	 *
 	 * @return    string

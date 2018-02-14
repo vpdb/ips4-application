@@ -100,10 +100,10 @@ class _Comment extends \IPS\Content\Comment implements \IPS\Content\EditHistory,
 	 */
 	public static function searchResultSnippet(array $indexData, array $authorData, array $itemData, array $containerData = NULL, array $reputationData, $reviewRating, $view)
 	{
-		$image = $itemData['image_medium_file_name'] ?: $itemData['image_masked_file_name'];
-		$url = \IPS\Http\Url::internal(\IPS\gallery\Image::$urlBase . $indexData['index_item_id'], 'front', \IPS\gallery\Image::$urlTemplate, \IPS\Http\Url\Friendly::seoTitle($indexData['index_title'] ?: $itemData[\IPS\gallery\Image::$databasePrefix . \IPS\gallery\Image::$databaseColumnMap['title']]));
+		$image = \IPS\vpdb\Vpdb\Storage::thumb($itemData['release_id_vpdb'], 'square');
+		$url = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=view&releaseId=' . $itemData['release_id_vpdb'] . '&gameId=' . $itemData['game_id_vpdb']);
 
-		return \IPS\Theme::i()->getTemplate('global', 'gallery', 'front')->searchResultCommentSnippet($indexData, $itemData, $image, $url, $reviewRating, $view == 'condensed');
+		return \IPS\Theme::i()->getTemplate('releases', 'vpdb', 'front')->searchResultCommentSnippet($indexData, $itemData, $image, $url, $reviewRating, $view == 'condensed');
 	}
 
 	/**

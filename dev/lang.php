@@ -39,17 +39,19 @@ $lang = array(
 	'sort_release_date' => 'Most recent',
 	'sort_release_rating' => 'Best rated',
 	'sort_release_popularity' => 'Popularity',
-	'vpdb_releases_count' =>  "{# [1:release][?:releases]}",
+	'vpdb_releases_count' => "{# [1:release][?:releases]}",
 
 	// notifications
 	'__indefart_vpdb_release_comment' => 'a comment on',
-	'__indefart_vpdb_release' => 'a release',
-	'__defart_vpdb_release' => 'release',
+	'__indefart_vpdb_release' => 'a Table Release',
+	'__defart_vpdb_release' => 'Table Release',
 
 	// streams
 	'vpdb_settings_content' => 'Content',
 	'all_activity_vpdb_releases' => 'Show Releases in Streams',
+	'vpdb_user_activity_comment' => "%s commented on %s",
 	'vpdb_release_stream_content_type' => 'Table Release',
 	'vpdb_user_own_activity_release' => '%s posted <b>%s</b> under Table Releases',
+	'view_this_release' => 'View this release',
 
 );
