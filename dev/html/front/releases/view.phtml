@@ -6,7 +6,7 @@
 	<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
 		<h1 class="ipsType_pageTitle">{$release->game->title}</h1>
 		<h2 class="ipsType_sectionHead">&nbsp;({$release->game->manufacturer} {$release->game->year})</h2>
-		<h2>{$release->name}</h2>
+		<h2>{$release->name} <span class="ipsType_unbold">by</span></h2>
 	</div>
 	<div class="ipsBox">
 		<div class="ipsColumns ipsColumns_collapsePhone">
@@ -15,11 +15,8 @@
 			<article class="ipsColumn ipsColumn_fluid">
 				<div class="ipsPad">
 
-					<!-- description -->
-					{$release->description|raw}
-
 					<!-- authors -->
-					<h2>Authors</h2>
+					<div class="ipsClearfix"></div>
 					{{foreach $release->authors as $author}}
 						<div class="ipsPhotoPanel ipsPhotoPanel_tiny ipsSpacer_bottom ipsPos_left" style="margin-right:15px">
 							{{if ($author->user->provider_id)}}
@@ -42,9 +39,35 @@
 							</div>
 						</div>
 					{{endforeach}}
+
+					<!-- reputation -->
+					{template="reputation" app="core" group="global" params="$release->item"}
 					<div class="ipsClearfix"></div>
+
+					<!-- stats (date, num downloads/views) -->
+					<ul class='ipsList_inline'>
+						<li class='ipsType_light ipsType_medium'>
+							<i class='fa fa-clock-o'></i> {datetime="strtotime($release->created_at)"}</a>
+						</li>
+						<li class='ipsType_light ipsType_medium'>
+							<i class='fa fa-arrow-circle-down'></i> {lang="num_downloads" pluralize="$release->counter->downloads"}
+						</li>
+						<li class='ipsType_light ipsType_medium'>
+							<i class='fa fa-eye'></i> {lang="num_views_with_number" pluralize="$release->counter->views"}
+						</li>
+					</ul>
+
+					<hr class="ipsHr">
+
+					<!-- description -->
+					<section class='ipsType_normal ipsSpacer_top'>
+						<div class='ipsType_richText ipsContained ipsType_break' itemprop='text' data-controller='core.front.core.lightboxedImages'>
+							{$release->description|raw}
+						</div>
+					</section>
+
 				</div>
-				{template="reputation" app="core" group="global" params="$release->item"}
+
 			</article>
 
 			<!-- right column -->

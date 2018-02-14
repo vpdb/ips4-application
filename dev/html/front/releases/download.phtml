@@ -117,7 +117,7 @@
 						<td>{{foreach $rom->languages as $lang}}<span>{$lang}</span> {{endforeach}}</td>
 						<td>{$rom->notes}</td>
 						<td>{$rom->file->counter->downloads}</td>
-						<td>{$rom->file->bytes}</td>
+						<td>{filesize="$rom->file->bytes"}</td>
 
 					</tr>
 					{{endforeach}}
