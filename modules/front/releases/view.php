@@ -3,8 +3,6 @@
 
 namespace IPS\vpdb\modules\front\releases;
 
-include_once(\IPS\ROOT_PATH . '/applications/vpdb/sources/Parsedown.php');
-
 /* To prevent PHP errors (extending class does not exist) revealing path */
 if (!defined('\IPS\SUITE_UNIQUE_KEY')) {
 	header((isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0') . ' 403 Forbidden');
@@ -59,11 +57,9 @@ class _view extends \IPS\Content\Controller
 	protected function manage()
 	{
 		$this->api = \IPS\vpdb\Vpdb\Api::getInstance();
-		$this->Parsedown = new \Parsedown();
 
 		try {
 			$release = $this->api->getReleaseDetails(\IPS\Request::i()->releaseId, ['thumb_flavor' => 'orientation:fs', 'thumb_format' => 'medium']);
-			$release->description = $this->Parsedown->text($release->description);
 
 			// download link
 			$release->download = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&releaseId=' . $release->id . '&gameId=' . $release->game->id);

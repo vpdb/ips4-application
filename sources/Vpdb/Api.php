@@ -3,6 +3,7 @@
 namespace IPS\vpdb\Vpdb;
 
 include_once(\IPS\ROOT_PATH . '/applications/vpdb/sources/RestClient.php');
+include_once(\IPS\ROOT_PATH . '/applications/vpdb/sources/Parsedown.php');
 
 /**
  * A singleton class that interfaces with the VPDB backend.
@@ -21,6 +22,12 @@ class _Api
 	protected $client;
 
 	/**
+	 * Markdown parser
+	 * @var \Parsedown
+	 */
+	protected $markdown;
+
+	/**
 	 * Api constructor.
 	 */
 	protected function __construct()
@@ -30,6 +37,7 @@ class _Api
 			'format' => 'json',
 			'headers' => ['Authorization' => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key],
 		]);
+		$this->markdown = new \Parsedown();
 	}
 
 	/**
@@ -79,7 +87,7 @@ class _Api
 		// add url and member data
 		foreach ($releases as $release) {
 			$dbData[] = $this->releaseToQuery($release);
-			$release->url = $this->getUrl($release);
+			$this->transform($release);
 			if ($loadMembers) {
 				$this->addMembers($release);
 			}
@@ -112,6 +120,7 @@ class _Api
 			throw new \IPS\vpdb\Vpdb\ApiException($result);
 		}
 		$release = $result->decode_response();
+		$this->transform($release);
 
 		// fetch game
 		$result = $this->client->get("/v1/games/" . $release->game->id, [], $this->getUserHeader());
@@ -166,6 +175,13 @@ class _Api
 	protected function getUrl($release)
 	{
 		return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=view&releaseId=' . $release->id . '&gameId=' . $release->game->id);
+	}
+
+	protected function transform($release) {
+		$release->url = $this->getUrl($release);
+		if ($release->description) {
+			$release->description = $this->markdown->text($release->description);
+		}
 	}
 
 	protected function addMembers($release) {
