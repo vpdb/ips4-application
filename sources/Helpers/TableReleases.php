@@ -59,7 +59,7 @@ class _TableReleases extends Table
 		$sortPrefix = $this->sortDirection == 'asc' ? '' : '-';
 
 		try {
-			list($releases, $numReleases) = $this->api->getReleases(["per_page" => 25, "sort" => $sortPrefix . $this->sortBy, "thumb_format" => "square"]);
+			list($releases, $numReleases) = $this->api->getReleases(["per_page" => 25, "sort" => $sortPrefix . $this->sortBy, "thumb_format" => "square"], true);
 
 			// table title
 			$this->title = \IPS\Member::loggedIn()->language()->pluralize(\IPS\Member::loggedIn()->language()->get('vpdb_releases_count'), array($numReleases));

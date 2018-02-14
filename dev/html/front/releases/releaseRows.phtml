@@ -3,7 +3,9 @@
 	{{foreach $releases as $release}}
 	<li class='ipsDataItem'>
 		<div class='ipsDataItem_generic ipsDataItem_size3 ipsPos_top'>
-			{template="thumbImage" group="global" app="core" params="$release->thumb->image->url, $release->id"}
+			<a href='{$release->url}' class='ipsType_blendLinks'>
+				{template="thumbImage" group="global" app="core" params="$release->thumb->image->url, $release->id"}
+			</a>
 		</div>
 		<div class='ipsDataItem_main'>
 
@@ -19,15 +21,31 @@
 
 			<!-- authors -->
 			<p class='ipsType_reset ipsType_light ipsType_blendLinks'>
-				By {{foreach $release->authors as $i => $author}}{{if ($i > 0 && $i < count($release->authors) - 1)}}, {{endif}}{{if ($i == count($release->authors) - 1)}} and {{endif}}
-					{{if ($author->user->provider_id)}}{$author->user->member->link()|raw}{{else}}{$author->user->name}{{endif}}{{endforeach}},
-					released {expression="\IPS\DateTime::ts(strtotime($release->versions[0]->released_at))->html()" raw="true"}
+				By {{foreach $release->authors as $i => $author}}{{if ($i > 0 && $i < count($release->authors) - 1)}}, {{endif}}
+					{{if ($i > 0 && $i == count($release->authors) - 1)}} and {{endif}}
+					{{if ($author->user->provider_id)}}{$author->user->member->link()|raw}{{else}}{$author->user->name}{{endif}}{{endforeach}}
 			</p>
 
 			<!-- downloads -->
-			<p class='ipsType_normal'>
-				<span {{if !$release->counter->downloads}}class='ipsType_light'{{endif}}><i class='fa fa-arrow-circle-down'></i> {lang="num_downloads" pluralize="$release->counter->downloads"}</span>
-			</p>
+			<!-- footer -->
+			<ul class='ipsList_inline ipsSpacer_top'>
+				<li class='ipsType_light ipsType_medium'>
+					<i class='fa fa-clock-o'></i> {datetime="strtotime($release->created_at)"}</a>
+				</li>
+				{{if $release->item->comments > -1}}
+					<li class='ipsType_light ipsType_medium'>
+						<i class='fa fa-comment'></i> {lang="num_comments" pluralize="$release->item->comments"}
+					</li>
+				{{endif}}
+				{{if $release->counter->downloads > -1}}
+					<li class='ipsType_light ipsType_medium'>
+						<i class='fa fa-arrow-circle-down'></i> {lang="num_downloads" pluralize="$release->counter->downloads"}
+					</li>
+				{{endif}}
+				{{if settings.reputation_enabled && count($release->item->templateReactions())}}
+					<li>{template="searchReaction" group="search" app="core" params="$release->item->templateReactions(), $release->url->setQueryString('do', 'showReactions'), $release->item->reactionCount()"}</li>
+				{{endif}}
+			</ul>
 		</div>
 	</li>
 	{{endforeach}}

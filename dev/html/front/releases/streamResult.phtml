@@ -48,8 +48,8 @@
 						</a>
 					</li>
 				{{endif}}
-				{{if settings.reputation_enabled && count($reactions)}}
-					<li>{template="searchReaction" group="search" app="core" params="$reactions, $release->url->setQueryString('do', 'showReactions'), $release->item->reactionCount()"}</li>
+				{{if settings.reputation_enabled && count($release->item->templateReactions())}}
+					<li>{template="searchReaction" group="search" app="core" params="$release->item->templateReactions(), $release->url->setQueryString('do', 'showReactions'), $release->item->reactionCount()"}</li>
 				{{endif}}
 			</ul>
 		{{endif}}

@@ -129,6 +129,14 @@ class _Release extends \IPS\Content\Item implements
 		}
 	}
 
+	public function templateReactions() {
+		$reactions = [];
+		foreach ($this->reactions() as $num => $r) {
+			$reactions[$r[0]] = $num;
+		}
+		return $reactions;
+	}
+
 	/**
 	 * Get URL from index data
 	 *
