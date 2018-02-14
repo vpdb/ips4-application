@@ -20,7 +20,9 @@ it becomes quickly a mess when dealing with notifications and reputation.
 
 So we keep a small table with VPDB releases that contain just VPDB's IDs, the
 game title and IPS-related data, and we only fetch through the API when we need
-more data.
+more data. However, since the only goal is to have a local reference, we don't
+want local release data show up in any kind of results, so a hook is used to
+not index local releases.
 
 ## Features
 
@@ -36,18 +38,29 @@ registration within IPS.
 This allows VPDB to include IPS user IDs whenever user data is returned so
 the IPS app can identify the user and render the widgets accordingly.
 
-At IPS, we obviously want to include VPDB-related data in the user's activity
-stream. This can be done through the [StreamItems Extension](https://invisioncommunity.com/developers/docs/development/extensions/corestreamitems-r161/),
-which allows to include extra items to stream results.
-
 Feature Set:
 
 - [X] Identify and link IPS users based on VPDB data
 - [X] Login at VPDB through IPS
 - [ ] Login at IPS through VPDB 
+
+
+### Activity Streams
+
+At IPS, we obviously want to include VPDB-related data in the user's activity
+stream. This can be done through the [StreamItems Extension](https://invisioncommunity.com/developers/docs/development/extensions/corestreamitems-r161/),
+which allows to include extra items to stream results.
+
+We do this by not including local releases in IPS' search index but fetching
+them directly through the API. 
+
 - [ ] List VPDB data in the user's activity stream
 - [ ] Display VPDB stats in user's info popup
 - [ ] Get notified when a followed user creates content at VPDB
+
+Note that these extra items are only fetched when IPS knows the last date to
+fetch, meaning that a user with no activity won't get any VPDB data displayed,
+even if there is some.
 
 ### Comments
 
@@ -82,6 +95,35 @@ This is the current feature set of release comments:
 - [ ] Comment shows up in global search
 - [ ] Get notified about new comments
 - [ ] Moderation (e.g. blocked users can't post)
+
+### Reputation
+
+Releases and other VPDB content can be reacted to, using [IPS 4.2's new
+reaction API](https://invisioncommunity.com/news/product-updates/new-reactions-r1016/).
+The problem is that VPDB can have multiple authors per release, while IPS 
+supports only one single content creator per item.
+
+At first, we tried to insert multiple reactions (for each author), but that 
+resulted in copying nearly all of the reaction code and other issues, specially
+when searching.
+
+Finally the following approach was chosen:
+
+- There is still only one reaction created. Which is generally what we want, 
+  because the reaction is really about the person who reacted and the content,
+  which stays the same for multiple authors.
+- However, reputation is added to all authors, and also all authors are 
+  notified about the reaction.
+  
+The reputation is computed incrementally, meaning it's not computed from the
+search index (which would only contain one author). However, the admin can 
+choose to re-compute it manually. In this case, there is a hook that ignores
+the index for VPDB data (since the author is random) and retrieves the
+number of releases directly from the VPDB API in order to correctly compute the 
+reputation.
+
+This will also be handy for new users, e.g. if an author who has releases
+with reactions on VPDB registers at IPS, its reputation can be easily updated.  
 
 ### Downloads
 
