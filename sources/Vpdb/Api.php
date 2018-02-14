@@ -62,6 +62,7 @@ class _Api
 	 */
 	public function getReleases(array $queryParams, $loadItems = false, $loadMembers = true)
 	{
+		// retrieve releases from vpdb
 		$result = $this->client->get("/v1/releases", $queryParams, $this->getUserHeader());
 		if ($result->info->http_code != 200) {
 			throw new \IPS\vpdb\Vpdb\ApiException($result);
@@ -69,6 +70,13 @@ class _Api
 
 		$dbData = array();
 		$releases = $result->decode_response();
+
+		// return if no results
+		if (count($releases) == 0) {
+			return [[], 0];
+		}
+
+		// add url and member data
 		foreach ($releases as $release) {
 			$dbData[] = $this->releaseToQuery($release);
 			$release->url = $this->getUrl($release);
