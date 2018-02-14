@@ -1,4 +1,4 @@
-<ips:template parameters="$release, $mainAuthor, $otherAuthors, $view"/>
+<ips:template parameters="$release, $mainAuthor, $otherAuthors, $reactions, $view"/>
 
 <li class='ipsStreamItem ipsStreamItem_contentBlock ipsStreamItem_{$view} ipsAreaBackground_reset ipsPad'>
 	<div class='ipsStreamItem_container ipsClearfix'>
@@ -49,6 +49,9 @@
 						<i class='fa fa-comment'></i> {lang="num_comments" pluralize="$release->item->comments"}
 						</a>
 					</li>
+				{{endif}}
+				{{if settings.reputation_enabled && count($reactions)}}
+					<li>{template="searchReaction" group="search" app="core" params="$reactions, $release->url->setQueryString('do', 'showReactions'), $release->item->reactionCount()"}</li>
 				{{endif}}
 			</ul>
 		{{endif}}
