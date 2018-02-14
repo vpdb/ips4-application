@@ -1,4 +1,4 @@
-<ips:template parameters="$release, $mainAuthor, $otherAuthors, $reactions, $view"/>
+<ips:template parameters="$release, $snippet, $mainAuthor, $otherAuthors, $reactions, $view"/>
 
 <li class='ipsStreamItem ipsStreamItem_contentBlock ipsStreamItem_{$view} ipsAreaBackground_reset ipsPad'>
 	<div class='ipsStreamItem_container ipsClearfix'>
@@ -29,14 +29,12 @@
 			</div>
 		</div>
 
-
 		{{if $view !== 'condensed'}}
 
-			<!-- body --
+			<!-- body -->
 			<div class='ipsStreamItem_snippet ipsType_break'>
 				{$snippet|raw}
-			</div-->
-
+			</div>
 
 			<!-- footer -->
 			<ul class='ipsList_inline ipsStreamItem_meta'>

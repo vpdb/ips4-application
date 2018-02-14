@@ -50,6 +50,6 @@ $lang = array(
 	'vpdb_settings_content' => 'Content',
 	'all_activity_vpdb_releases' => 'Show Releases in Streams',
 	'vpdb_release_stream_content_type' => 'Table Release',
-	'vpdb_user_own_activity_release' => '%s posted <b>%s</b> under table releases',
+	'vpdb_user_own_activity_release' => '%s posted <b>%s</b> under Table Releases',
 
 );

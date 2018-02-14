@@ -164,6 +164,10 @@ class _Release extends \IPS\Content\Item implements
 		return 'release_id';
 	}
 
+	public static function streamResultSnippet($release, $view) {
+		return \IPS\Theme::i()->getTemplate('releases', 'vpdb', 'front')->searchResultReleaseSnippet($release, $view == 'condensed');
+	}
+
 	/**
 	 * React.
 	 *

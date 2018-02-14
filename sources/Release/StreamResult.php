@@ -31,6 +31,7 @@ class _StreamResult extends \IPS\Content\Search\Result
 	/**
 	 * HTML
 	 *
+	 * @param string $view Either "expanded" or "condensed".
 	 * @return    string
 	 */
 	public function html($view = 'expanded')
@@ -57,12 +58,11 @@ class _StreamResult extends \IPS\Content\Search\Result
 			$otherAuthors = array_slice($this->release->authors, 1);
 		}
 
-
 		$reactions = [];
 		foreach ($this->release->item->reactions() as $num => $r) {
 			$reactions[$r[0]] = $num;
 		}
 
-		return \IPS\Theme::i()->getTemplate('releases', 'vpdb', 'front')->streamResult($this->release, $mainAuthor, $otherAuthors, $reactions, $view);
+		return \IPS\Theme::i()->getTemplate('releases', 'vpdb', 'front')->streamResult($this->release, \IPS\vpdb\Release::streamResultSnippet($this->release, $view), $mainAuthor, $otherAuthors, $reactions, $view);
 	}
 }

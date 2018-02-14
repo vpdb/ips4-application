@@ -1,0 +1,39 @@
+<ips:template parameters="$release, $condensed" />
+{{if $condensed}}
+	<span class='ipsThumb_bg ipsThumb_small ipsPos_left' style='background-image: url("{file="$release->thumb->image->url"}")'>
+		<img src='{file="$release->thumb->image->url"}' alt='{lang="idm_screenshot_for" sprintf="$release->name"}' class="">
+	</span>
+{{else}}
+<div class='ipsColumns ipsColumns_collapsePhone'>
+	<div class='ipsColumn ipsColumn_medium'>
+		<a href='{$release->url}'>
+			{template="thumbImage" group="global" app="core" location="front" params="$release->thumb->image->url, $release->name, 'large', '', 'view_this'"}
+		</a>
+	</div>
+<!--	<div class='ipsColumn ipsColumn_fluid ipsStream_snippetInfo'>-->
+<!--		<p class='ipsType_reset ipsType_light ipsType_normal'>{lang="version"} {$itemData['file_version']}</p>-->
+<!--		{{if !$price or in_array( 'downloads', explode( ',', settings.idm_nexus_display ) ) }}-->
+<!--		<p class='ipsType_reset ipsType_normal'><i class='fa fa-download'></i> {lang="num_downloads" pluralize="$itemData['file_downloads']"}</p>-->
+<!--		{{endif}}-->
+<!---->
+<!---->
+<!--		{{if trim( $indexData['index_content'] ) !== ''}}-->
+<!--		<div class='ipsSpacer_top ipsSpacer_half ipsType_richText ipsType_break ipsType_medium' {{if !( \IPS\Dispatcher::i()->application->directory == 'core' and \IPS\Dispatcher::i()->module and \IPS\Dispatcher::i()->module->key == 'search' )}}data-ipsTruncate data-ipsTruncate-type='remove' data-ipsTruncate-size='2 lines' data-ipsTruncate-watch='false'{{else}}data-searchable data-findTerm{{endif}}>-->
+<!--			{$indexData['index_content']|raw}-->
+<!--		</div>-->
+<!--		{{endif}}-->
+<!---->
+<!--		{{if \IPS\Application::appIsEnabled( 'nexus' ) and settings.idm_nexus_on}}-->
+<!--		<p class='ipsType_large ipsType_reset ipsSpacer_top ipsSpacer_half'>-->
+<!--					<span class='ipsStream_price'>-->
+<!--						{{if $price}}-->
+<!--							{$price|raw}-->
+<!--						{{else}}-->
+<!--							{lang="file_free"}-->
+<!--						{{endif}}-->
+<!--					</span>-->
+<!--		</p>-->
+<!--		{{endif}}-->
+<!--	</div>-->
+</div>
+{{endif}}
