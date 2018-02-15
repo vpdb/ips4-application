@@ -18,6 +18,18 @@ class _Application extends \IPS\Application
 {
 
 	/**
+	 * Init
+	 *
+	 * @return    void
+	 */
+	public function init()
+	{
+		\IPS\Output::i()->cssFiles = array_merge(\IPS\Output::i()->cssFiles, \IPS\Theme::i()->css('layout.css'));
+		\IPS\Output::i()->cssFiles = array_merge(\IPS\Output::i()->cssFiles, \IPS\Theme::i()->css('tables.css'));
+	}
+
+
+	/**
 	 * Default front navigation
 	 *
 	 * @code
@@ -53,8 +65,8 @@ class _Application extends \IPS\Application
 	/**
 	 * [Node] Get Icon for tree
 	 *
-	 * @note	Return the class for the icon (e.g. 'globe')
-	 * @return	string|null
+	 * @note    Return the class for the icon (e.g. 'globe')
+	 * @return    string|null
 	 */
 	protected function get__icon()
 	{

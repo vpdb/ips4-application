@@ -1,0 +1,10 @@
+.ipsTable.vpdbTable th {
+	text-align: left;
+	background: {theme="area_background_light"};
+	padding: 7px;
+	font-size: 13px;
+}
+html[dir="rtl"] .ipsTable th {
+	text-align: right;
+	padding: 15px 10px 15px 20px;
+}

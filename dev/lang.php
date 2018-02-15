@@ -41,6 +41,16 @@ $lang = array(
 	'sort_release_popularity' => 'Popularity',
 	'vpdb_releases_count' => "{# [1:release][?:releases]}",
 
+	// releases - download
+	'vpdb_download_flavor_each' => "<b>%s</b> Orientation, <b>%s</b> Lighting",
+	'vpdb_download_flavor_both_universal' => "<b>Universal</b> Orientation and Lighting",
+	'vpdb_download_media' => "Media",
+	'vpdb_download_include_game_media' => "Include game media",
+	'vpdb_download_include_playfield_image' => "Include playfield shot",
+	'vpdb_download_include_playfield_video' => "Include playfield video",
+	'vpdb_download_roms' => "ROMs",
+	'vpdb_download_no_roms_available' => "No ROMs available for this game.",
+
 	// notifications
 	'__indefart_vpdb_release_comment' => 'a comment on',
 	'__indefart_vpdb_release' => 'a Table Release',

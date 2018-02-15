@@ -26,22 +26,29 @@
 					{{if ($author->user->provider_id)}}{$author->user->member->link()|raw}{{else}}{$author->user->name}{{endif}}{{endforeach}}
 			</p>
 
-			<!-- downloads -->
 			<!-- footer -->
 			<ul class='ipsList_inline ipsSpacer_top'>
+
+				<!-- release date -->
 				<li class='ipsType_light ipsType_medium'>
 					<i class='fa fa-clock-o'></i> {datetime="strtotime($release->created_at)"}</a>
 				</li>
+
+				<!-- comments -->
 				{{if $release->item->comments > -1}}
 					<li class='ipsType_light ipsType_medium'>
 						<i class='fa fa-comment'></i> {lang="num_comments" pluralize="$release->item->comments"}
 					</li>
 				{{endif}}
+
+				<!-- downloads -->
 				{{if $release->counter->downloads > -1}}
 					<li class='ipsType_light ipsType_medium'>
 						<i class='fa fa-arrow-circle-down'></i> {lang="num_downloads" pluralize="$release->counter->downloads"}
 					</li>
 				{{endif}}
+
+				<!-- reactions -->
 				{{if settings.reputation_enabled && count($release->item->templateReactions())}}
 					<li>{template="searchReaction" group="search" app="core" params="$release->item->templateReactions(), $release->url->setQueryString('do', 'showReactions'), $release->item->reactionCount()"}</li>
 				{{endif}}

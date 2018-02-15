@@ -1,0 +1,24 @@
+/* SPACER STYLES */
+.ipsApp .ipsSpacer_left, .ipsApp .ipsSpacer_both {
+	margin-left: 15px;
+}
+
+.ipsApp .ipsSpacer_left.ipsSpacer_double, .ipsApp .ipsSpacer_both.ipsSpacer_double {
+	margin-left: 30px;
+}
+
+.ipsApp .ipsSpacer_left.ipsSpacer_half, .ipsApp .ipsSpacer_both.ipsSpacer_half {
+	margin-left: 7px;
+}
+
+.ipsApp .ipsSpacer_right, .ipsApp .ipsSpacer_both {
+	margin-right: 15px;
+}
+
+.ipsApp .ipsSpacer_right.ipsSpacer_double, .ipsApp .ipsSpacer_both.ipsSpacer_double {
+	margin-right: 30px;
+}
+
+.ipsApp .ipsSpacer_right.ipsSpacer_half, .ipsApp .ipsSpacer_both.ipsSpacer_half {
+	margin-right: 7px;
+}
