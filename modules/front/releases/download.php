@@ -59,11 +59,12 @@ class _download extends \IPS\Dispatcher\Controller
 	{
 		$releaseId = \IPS\Request::i()->releaseId;
 		$gameId = \IPS\Request::i()->gameId;
+		\IPS\Output::i()->jsFiles = array_merge(\IPS\Output::i()->jsFiles, \IPS\Output::i()->js('front_download.js', 'vpdb'));
 
 		try {
 			$release = $this->api->getReleaseDetails($releaseId, ['thumb_flavor' => 'orientation:fs', 'thumb_format' => 'medium']);
 			$roms = $this->api->getRoms($gameId);
-			$action = $release->url = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&do=prepareDownload&releaseId=' . $releaseId . '&gameId=' . $gameId);
+			$action = $release->url = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&do=getDownloadUrl&releaseId=' . $releaseId . '&gameId=' . $gameId);
 
 			// retrieve game media
 			$addedCategories = [];
@@ -84,32 +85,49 @@ class _download extends \IPS\Dispatcher\Controller
 		}
 	}
 
-	protected function prepareDownload()
+	/**
+	 * Receives form data from the download dialog, tries to get an storage token for it and
+	 * returns the whole URL.
+	 *
+	 * This is an ajax-only function.
+	 *
+	 * @throws \RestClientException
+	 */
+	protected function getDownloadUrl()
 	{
 		$releaseId = \IPS\Request::i()->releaseId;
 		$gameId = \IPS\Request::i()->gameId;
 		$releaseUrl = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=view&releaseId=' . $releaseId . '&gameId=' . $gameId);
 
+		// enter ajax land
+		if (!\IPS\Request::i()->isAjax()) {
+			\IPS\Output::i()->redirect($releaseUrl);
+			return;
+		}
+
 		// check if the user is logged, if not, redirect to login screen
+
+		// here we assume the user is logged and locally marked as on vpdb.
 
 
 		try {
-			// check if the user is on vpdb, if not, redirect to vpdb register screen
+
+			// still check at vpdb if that's true
 			$user = $this->api->getUserProfile();
 			if ($user) {
 				$downloadUrl = \IPS\Settings::i()->vpdb_url_storage . '/v1/releases/' . $releaseId;
 				$auth = $this->storage->authenticate($downloadUrl);
 
 				$download = [
-					'files' => $_POST['tableFile'],
+					'files' => $_GET['tableFile'],
 					'media' => [
-						'playfield_image' => $_POST['includePlayfieldImage'],
-						'playfield_video' => $_POST['includePlayfieldVideo'],
+						'playfield_image' => $_GET['includePlayfieldImage'],
+						'playfield_video' => $_GET['includePlayfieldVideo'],
 					],
-					'roms' => $_POST['rom']
+					'roms' => $_GET['rom']
 				];
-				if ($_POST['includeGameMedia']) {
-					$download['game_media'] = $_POST['media'];
+				if ($_GET['includeGameMedia']) {
+					$download['game_media'] = $_GET['media'];
 				}
 
 				$fullUrl = $downloadUrl .
@@ -117,24 +135,19 @@ class _download extends \IPS\Dispatcher\Controller
 					'&token=' . $auth->$downloadUrl .
 					'&save_as=1';
 
-				$err = $this->storage->checkDownload($fullUrl);
-				if (!$err) {
-					\IPS\Output::i()->jsFiles = array_merge(\IPS\Output::i()->jsFiles, \IPS\Output::i()->js('front_download.js', 'vpdb'));
-					\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->download($downloadUrl, json_encode($download), $auth->$downloadUrl, '1', $releaseUrl);
-
-				} else {
-					\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->downloadError($err, $releaseUrl);
-				}
+				\IPS\Output::i()->json(array('url' => $fullUrl));
 
 			} else {
 				// otherwise, redirect to vpdb backend with download link
-				$continue = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&do=register&releaseId=' . $releaseId . '&gameId=' . $gameId);
-				\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->register($releaseUrl, $continue);
+				//$continue = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&do=register&releaseId=' . $releaseId . '&gameId=' . $gameId);
+				//\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->register($releaseUrl, $continue);
+				\IPS\Output::i()->json(array('error' => 'user not on vpdb'));
 			}
 
 
 		} catch (\IPS\vpdb\Vpdb\ApiException $e) {
-			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->apiError($e);
+			\IPS\Output::i()->json(array('error' => $e));
+			//\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->apiError($e);
 		}
 	}
 
