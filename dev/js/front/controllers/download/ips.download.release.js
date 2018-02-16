@@ -8,6 +8,7 @@
 
 		initialize: function() {
 			this.on('click', '[data-action="download"]', this.download);
+			this.registerUrl = this.scope.attr('data-register');
 		},
 
 		download: function() {
@@ -24,6 +25,7 @@
 						downloadBtn.prop('disabled', false);
 						if (err) {
 							errMessage.text(err.error).show();
+
 						} else {
 							errMessage.hide();
 							that.trigger('closeDialog');
@@ -33,7 +35,16 @@
 
 				} else if (response.error) {
 					downloadBtn.prop('disabled', false);
-					errMessage.text(response.error).show();
+					if (response.error === 'registration_needed') {
+						var registerDialog = ips.ui.dialog.create({
+							url: that.registerUrl,
+							size: 'narrow'
+						});
+						registerDialog.show();
+
+					} else {
+						errMessage.text(response.error).show();
+					}
 
 				} else {
 					downloadBtn.prop('disabled', false);

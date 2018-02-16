@@ -1,6 +1,6 @@
-<ips:template parameters="$release, $roms, $gameMedia, $flavors, $action"/>
+<ips:template parameters="$release, $roms, $gameMedia, $flavors, $action, $registerUrl"/>
 
-<div class="ipsPad" data-controller="vpdb.front.download.release">
+<div class="ipsPad" data-controller="vpdb.front.download.release" data-register="{$registerUrl}">
 	<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
 		<h2 class="ipsType_sectionHead"><b>$release->name</b> of</h2>
 		<br>
@@ -141,12 +141,12 @@
 		<div id="releaseDownloadError" class="ipsMessage ipsMessage_error" style="display:none">
 		</div>
 
-		<!-- button -->
+		<!-- buttons -->
 		<div class="ipsType_center">
-		<span>
-			<button type="button" data-action="dialogClose" class="ipsButton ipsButton_large ipsButton_light">Cancel</button>
-			<button type="button" data-action="download" class="ipsSpacer_left ipsSpacer_half ipsButton ipsButton_large ipsButton_important">Download</button>
-		</span>
+			<span>
+				<button type="button" data-action="dialogClose" class="ipsButton ipsButton_large ipsButton_light">Cancel</button>
+				<button type="button" data-action="download" class="ipsSpacer_left ipsSpacer_half ipsButton ipsButton_large ipsButton_important">Download</button>
+			</span>
 		</div>
 		<div class="ipsClearfix"></div>
 	</form>

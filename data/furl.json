@@ -35,6 +35,10 @@
 		"vpdb_release_view": {
 			"real": "app=vpdb&module=releases&controller=view",
 			"friendly": "games/{@gameId}/releases/{@releaseId}"
+		},
+		"vpdb_register": {
+			"real": "app=vpdb&module=core&controller=register",
+			"friendly": "register"
 		}
 	}
 }

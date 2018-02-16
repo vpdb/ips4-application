@@ -64,7 +64,8 @@ class _download extends \IPS\Dispatcher\Controller
 		try {
 			$release = $this->api->getReleaseDetails($releaseId, ['thumb_flavor' => 'orientation:fs', 'thumb_format' => 'medium']);
 			$roms = $this->api->getRoms($gameId);
-			$action = $release->url = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&do=getDownloadUrl&releaseId=' . $releaseId . '&gameId=' . $gameId);
+			$action = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&releaseId=' . $releaseId . '&gameId=' . $gameId . '&do=getDownloadUrl');
+			$registerUrl = \IPS\Http\Url::internal('app=vpdb&module=core&controller=register');
 
 			// retrieve game media
 			$addedCategories = [];
@@ -78,7 +79,7 @@ class _download extends \IPS\Dispatcher\Controller
 
 			// render
 			\IPS\Output::i()->title = $release->game->title . ' - ' . $release->name;
-			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->download($release, $roms, $gameMedia, \IPS\vpdb\Vpdb\Api::$flavors, $action);
+			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->download($release, $roms, $gameMedia, \IPS\vpdb\Vpdb\Api::$flavors, $action, $registerUrl);
 
 		} catch (\IPS\vpdb\Vpdb\ApiException $e) {
 			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->apiError($e);
@@ -107,16 +108,15 @@ class _download extends \IPS\Dispatcher\Controller
 
 		// check if the user is logged, if not, redirect to login screen
 
-		// here we assume the user is logged and locally marked as on vpdb.
-
-
 		try {
 
-			// still check at vpdb if that's true
+			// we check on vpdb side if the user is on ips
 			$user = $this->api->getUserProfile();
 			if ($user) {
 				$downloadUrl = \IPS\Settings::i()->vpdb_url_storage . '/v1/releases/' . $releaseId;
-				$auth = $this->storage->authenticate($downloadUrl);
+
+				// the client doesn't crash on 400 when it's a provider user non-existant, it just return null.
+				$auth = $this->storage->authenticate('');
 
 				$download = [
 					'files' => $_GET['tableFile'],
@@ -138,16 +138,11 @@ class _download extends \IPS\Dispatcher\Controller
 				\IPS\Output::i()->json(array('url' => $fullUrl));
 
 			} else {
-				// otherwise, redirect to vpdb backend with download link
-				//$continue = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&do=register&releaseId=' . $releaseId . '&gameId=' . $gameId);
-				//\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->register($releaseUrl, $continue);
-				\IPS\Output::i()->json(array('error' => 'user not on vpdb'));
+				\IPS\Output::i()->json(array('error' => 'registration_needed'));
 			}
-
 
 		} catch (\IPS\vpdb\Vpdb\ApiException $e) {
 			\IPS\Output::i()->json(array('error' => $e));
-			//\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->apiError($e);
 		}
 	}
 
