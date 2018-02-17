@@ -24,5 +24,22 @@
   <word key="sort_release_rating" js="0">Best rated</word>
   <word key="sort_release_popularity" js="0">Popularity</word>
   <word key="vpdb_releases_count" js="0">{# [1:release][?:releases]}</word>
+  <word key="vpdb_download_flavor_each" js="0"><![CDATA[<b>%s</b> Orientation, <b>%s</b> Lighting]]></word>
+  <word key="vpdb_download_flavor_both_universal" js="0"><![CDATA[<b>Universal</b> Orientation and Lighting]]></word>
+  <word key="vpdb_download_media" js="0">Media</word>
+  <word key="vpdb_download_include_game_media" js="0">Include game media</word>
+  <word key="vpdb_download_include_playfield_image" js="0">Include playfield shot</word>
+  <word key="vpdb_download_include_playfield_video" js="0">Include playfield video</word>
+  <word key="vpdb_download_roms" js="0">ROMs</word>
+  <word key="vpdb_download_no_roms_available" js="0">No ROMs available for this game.</word>
+  <word key="__indefart_vpdb_release_comment" js="0">a comment on</word>
+  <word key="__indefart_vpdb_release" js="0">a Table Release</word>
+  <word key="__defart_vpdb_release" js="0">Table Release</word>
+  <word key="vpdb_settings_content" js="0">Content</word>
+  <word key="all_activity_vpdb_releases" js="0">Show Releases in Streams</word>
+  <word key="vpdb_user_activity_comment" js="0">%s commented on %s</word>
+  <word key="vpdb_release_stream_content_type" js="0">Table Release</word>
+  <word key="vpdb_user_own_activity_release" js="0"><![CDATA[%s posted <b>%s</b> under Table Releases]]></word>
+  <word key="view_this_release" js="0">View this release</word>
  </app>
 </language>
