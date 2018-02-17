@@ -9,19 +9,30 @@
 		initialize: function() {
 			this.on('click', '[data-action="register"]', this.register);
 			this.registerUrl = this.scope.attr('data-register');
+			this.errMessage = $('#registerError').hide();
 		},
 
 		register: function() {
+			var that = this;
+			var continueBtn = $('[data-action="register"]');
+			continueBtn.prop('disabled', true);
 			ips.getAjax()(this.registerUrl, { type: 'post', data: { confirmed: true } })
 				.done(function(response) {
-					console.log('done!', response);
+					if (response.error) {
+						console.log(response);
+						that.errMessage.text(response.error).show();
+						return;
+					}
+					that.trigger('closeDialog');
+					ips.ui.flashMsg.show('Registration at VPDB successful!');
+					$(document).trigger('vpdbRegistrationSuccessful');
 				})
 				.fail(function(err) {
-					console.log('failed!', err);
+					that.errMessage.text(err).show();
 				})
 				.always(function() {
-
-				});
+					continueBtn.prop('disabled', false);
+				})
 		}
 	});
 

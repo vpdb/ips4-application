@@ -41,12 +41,37 @@ class _Api
 	}
 
 	/**
+	 * Registers a member at VPDB
+	 *
+	 * @param \IPS\_Member $member Member to register
+	 * @return mixed Created user profile
+	 * @throws \RestClientException
+	 */
+	public function registerUser($member)
+	{
+		$result = $this->client->put("/v1/users", json_encode([
+			'email' => $member->email,
+			'username' => $member->name,
+			'provider_id' => $member->member_id,
+			'provider_profile' => [
+				'avatar' => $member->photo,
+				'profileUrl' => (string)$member->url(),
+			]
+		]), ['Content-Type' => 'application/json']);
+		if ($result->info->http_code != 201) {
+			throw new \IPS\vpdb\Vpdb\ApiException($result);
+		}
+		return $result->decode_response();
+	}
+
+	/**
 	 * Returns the VPDB profile of currently loged IPS user.
 	 *
 	 * @return mixed|null Profile or null if user not registered at VPDB. All other errors throw an exception.
 	 * @throws \RestClientException
 	 */
-	public function getUserProfile() {
+	public function getUserProfile()
+	{
 		$result = $this->client->get("/v1/user", [], $this->getUserHeader());
 		if ($result->info->http_code == 400 && preg_match('/no user with id "\d+" for provider/i', $result->decode_response()->error)) {
 			return null;
@@ -147,7 +172,8 @@ class _Api
 	 * @return mixed
 	 * @throws \RestClientException
 	 */
-	public function getRoms($gameId) {
+	public function getRoms($gameId)
+	{
 		$result = $this->client->get('/v1/games/' . $gameId . '/roms', [], $this->getUserHeader());
 		if ($result->info->http_code != 200) {
 			throw new \IPS\vpdb\Vpdb\ApiException($result);
@@ -177,14 +203,16 @@ class _Api
 		return \IPS\Http\Url::internal('app=vpdb&module=releases&controller=view&releaseId=' . $release->id . '&gameId=' . $release->game->id);
 	}
 
-	protected function transform($release) {
+	protected function transform($release)
+	{
 		$release->url = $this->getUrl($release);
 		if ($release->description) {
 			$release->description = $this->markdown->text($release->description);
 		}
 	}
 
-	protected function addMembers($release) {
+	protected function addMembers($release)
+	{
 		foreach ($release->authors as $author) {
 			if ($author->user->provider_id) {
 				$release->hasMemberAuthors = true;

@@ -8,6 +8,7 @@
 
 		initialize: function() {
 			this.on('click', '[data-action="download"]', this.download);
+			$(document).on('vpdbRegistrationSuccessful', this.download);
 			this.registerUrl = this.scope.attr('data-register');
 		},
 
@@ -66,9 +67,9 @@
 		var xhr = new XMLHttpRequest();
 		xhr.open('GET', url, true);
 		xhr.responseType = 'arraybuffer';
-		xhr.onload = function () {
+		xhr.onload = function() {
 			if (this.status === 200) {
-				var filename = "";
+				var filename = '';
 				var disposition = xhr.getResponseHeader('Content-Disposition');
 				if (disposition && disposition.indexOf('attachment') !== -1) {
 					var filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
@@ -89,7 +90,7 @@
 
 					if (filename) {
 						// use HTML5 a[download] attribute to specify filename
-						var a = document.createElement("a");
+						var a = document.createElement('a');
 						// safari doesn't support this yet
 						if (typeof a.download === 'undefined') {
 							window.location = downloadUrl;
@@ -103,7 +104,7 @@
 						window.location = downloadUrl;
 					}
 
-					setTimeout(function () {
+					setTimeout(function() {
 						URL.revokeObjectURL(downloadUrl);
 						callback();
 					}, 100); // cleanup

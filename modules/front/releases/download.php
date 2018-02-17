@@ -116,7 +116,7 @@ class _download extends \IPS\Dispatcher\Controller
 				$downloadUrl = \IPS\Settings::i()->vpdb_url_storage . '/v1/releases/' . $releaseId;
 
 				// the client doesn't crash on 400 when it's a provider user non-existant, it just return null.
-				$auth = $this->storage->authenticate('');
+				$auth = $this->storage->authenticate($downloadUrl);
 
 				$download = [
 					'files' => $_GET['tableFile'],
@@ -135,7 +135,7 @@ class _download extends \IPS\Dispatcher\Controller
 					'&token=' . $auth->$downloadUrl .
 					'&save_as=1';
 
-				\IPS\Output::i()->json(array('url' => $fullUrl));
+				\IPS\Output::i()->json(array('url' => $fullUrl, 'auth' => json_encode($auth), 'originalUrl' => $downloadUrl));
 
 			} else {
 				\IPS\Output::i()->json(array('error' => 'registration_needed'));
@@ -144,11 +144,6 @@ class _download extends \IPS\Dispatcher\Controller
 		} catch (\IPS\vpdb\Vpdb\ApiException $e) {
 			\IPS\Output::i()->json(array('error' => $e));
 		}
-	}
-
-	protected function register()
-	{
-
 	}
 
 	// Create new methods with the same name as the 'do' parameter which should execute it
