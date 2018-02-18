@@ -66,7 +66,7 @@ class _view extends \IPS\Content\Controller
 
 			/* Display */
 			\IPS\Output::i()->title = $release->game->title . ' - ' . $release->name;
-			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->view($release, $release->item->renderComments());
+			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->view($release, $release->item->renderComments(), !!\IPS\Member::loggedIn()->member_id);
 
 		} catch (\IPS\vpdb\Vpdb\ApiException $e) {
 			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->apiError($e);

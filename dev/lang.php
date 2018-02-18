@@ -50,6 +50,7 @@ $lang = array(
 	'vpdb_download_include_playfield_video' => "Include playfield video",
 	'vpdb_download_roms' => "ROMs",
 	'vpdb_download_no_roms_available' => "No ROMs available for this game.",
+	'vpdb_release_download_teaser' => "Create an account or sign in to download",
 
 	// notifications
 	'__indefart_vpdb_release_comment' => 'a comment on',
@@ -63,5 +64,7 @@ $lang = array(
 	'vpdb_release_stream_content_type' => 'Table Release',
 	'vpdb_user_own_activity_release' => '%s posted <b>%s</b> under Table Releases',
 	'view_this_release' => 'View this release',
+	'vpdb_release_pl' => 'Released Tables',
+	'vpdb_release_comment_pl' => 'Commented Table Releases',
 
 );

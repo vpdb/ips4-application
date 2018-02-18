@@ -1,4 +1,4 @@
-<ips:template parameters="$release, $comments"/>
+<ips:template parameters="$release, $comments, $isLogged"/>
 
 <div class="ipsPad">
 
@@ -92,7 +92,12 @@
 					<!-- download button -->
 					<ul class="ipsToolList ipsToolList_vertical ipsSpacer_top ipsClearfix">
 						<li>
-							<a href="{$release->download}" data-ipsDialog data-ipsDialog-size='medium' data-ipsDialog-title='{lang="download"}' class="ipsButton ipsButton_fullWidth ipsButton_large ipsButton_important">Download</a>
+							{{if $isLogged}}
+								<a href="{$release->download}" data-ipsDialog data-ipsDialog-size='medium' data-ipsDialog-title='{lang="download"}' class="ipsButton ipsButton_fullWidth ipsButton_large ipsButton_important">Download</a>
+							{{else}}
+								{template="downloadTeaser" app="vpdb" group="releases"}
+							{{endif}}
+
 						</li>
 					</ul>
 				</div>
