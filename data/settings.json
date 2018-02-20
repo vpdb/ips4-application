@@ -1,26 +1,30 @@
 [
-    {
-        "key": "vpdb_app_key",
-        "default": ""
-    },
-    {
-        "key": "vpdb_oauth_client",
-        "default": ""
-    },
-    {
-        "key": "vpdb_url_web",
-        "default": "https:\/\/vpdb.io"
-    },
-    {
-        "key": "vpdb_url_api",
-        "default": "https:\/\/api.vpdb.io"
-    },
-    {
-        "key": "vpdb_url_storage",
-        "default": "https:\/\/storage.vpdb.io"
-    },
-    {
-        "key": "all_activity_vpdb_releases",
-        "default": "true"
-    }
+	{
+		"key": "vpdb_app_key",
+		"default": ""
+	},
+	{
+		"key": "vpdb_oauth_client",
+		"default": ""
+	},
+	{
+		"key": "vpdb_authorization_header",
+		"default": "Authorization"
+	},
+	{
+		"key": "vpdb_url_web",
+		"default": "https:\/\/vpdb.io"
+	},
+	{
+		"key": "vpdb_url_api",
+		"default": "https:\/\/api.vpdb.io"
+	},
+	{
+		"key": "vpdb_url_storage",
+		"default": "https:\/\/storage.vpdb.io"
+	},
+	{
+		"key": "all_activity_vpdb_releases",
+		"default": "true"
+	}
 ]

@@ -36,7 +36,7 @@ class _home extends \IPS\Dispatcher\Controller
 		$api = new \RestClient([
 			'base_url' => \IPS\Settings::i()->vpdb_url_api,
 			'format' => 'json',
-			'headers' => ['Authorization' => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key],
+			'headers' => [\IPS\Settings::i()->vpdb_authorization_header => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key],
 		]);
 
 		$result = $api->get("/v1/releases", ["per_page" => 6, "sort" => "released_at", "thumb_format" => "square"]);

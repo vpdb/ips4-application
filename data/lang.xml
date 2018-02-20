@@ -11,6 +11,7 @@
   <word key="menu__vpdb_vpdb_settings" js="0">Settings</word>
   <word key="vpdb_app_key" js="0">App Key</word>
   <word key="vpdb_oauth_client" js="0">Provider</word>
+  <word key="vpdb_authorization_header" js="0">Authorization Header</word>
   <word key="vpdb_url_api" js="0">API Endpoint</word>
   <word key="vpdb_url_web" js="0">Web Endpoint</word>
   <word key="vpdb_url_storage" js="0">Storage Endpoint</word>

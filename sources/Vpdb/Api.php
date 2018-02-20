@@ -35,7 +35,7 @@ class _Api
 		$this->client = new \RestClient([
 			'base_url' => \IPS\Settings::i()->vpdb_url_api,
 			'format' => 'json',
-			'headers' => ['Authorization' => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key],
+			'headers' => [\IPS\Settings::i()->vpdb_authorization_header => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key],
 		]);
 		$this->markdown = new \Parsedown();
 	}

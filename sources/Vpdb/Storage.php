@@ -34,7 +34,7 @@ class _Storage
 		$this->client = new \RestClient([
 			'base_url' => \IPS\Settings::i()->vpdb_url_storage,
 			'format' => 'json',
-			'headers' => ['Authorization' => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key],
+			'headers' => [\IPS\Settings::i()->vpdb_authorization_header => 'Bearer ' . \IPS\Settings::i()->vpdb_app_key],
 		]);
 
 		$this->anonClient = new \RestClient();
