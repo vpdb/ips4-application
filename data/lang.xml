@@ -32,6 +32,7 @@
   <word key="vpdb_download_include_playfield_video" js="0">Include playfield video</word>
   <word key="vpdb_download_roms" js="0">ROMs</word>
   <word key="vpdb_download_no_roms_available" js="0">No ROMs available for this game.</word>
+  <word key="vpdb_release_download_teaser" js="0">Create an account or sign in to download</word>
   <word key="__indefart_vpdb_release_comment" js="0">a comment on</word>
   <word key="__indefart_vpdb_release" js="0">a Table Release</word>
   <word key="__defart_vpdb_release" js="0">Table Release</word>
@@ -41,5 +42,7 @@
   <word key="vpdb_release_stream_content_type" js="0">Table Release</word>
   <word key="vpdb_user_own_activity_release" js="0"><![CDATA[%s posted <b>%s</b> under Table Releases]]></word>
   <word key="view_this_release" js="0">View this release</word>
+  <word key="vpdb_release_pl" js="0">Released Tables</word>
+  <word key="vpdb_release_comment_pl" js="0">Commented Table Releases</word>
  </app>
 </language>

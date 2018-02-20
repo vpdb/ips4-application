@@ -249,6 +249,9 @@
 	</form>
 </div>
 ]]></template>
+ <template template_group="releases" template_name="downloadTeaser" template_data="" template_location="front" template_app="vpdb"><![CDATA[
+<span class="ipsType_light ipsType_blendLinks ipsResponsive_hidePhone ipsResponsive_inline"><i class="fa fa-info-circle"></i> {lang="vpdb_release_download_teaser"}</span>
+]]></template>
  <template template_group="releases" template_name="list" template_data="$table" template_location="front" template_app="vpdb"><![CDATA[
 <div class="ipsPad">
 	<div class="ipsPageHeader ipsClearfix ipsSpacer_bottom">
@@ -387,7 +390,7 @@
 		</div>
 	</div>
 {{endif}}]]></template>
- <template template_group="releases" template_name="streamResult" template_data="$release, $mainAuthor, $otherAuthors, $reactions, $view" template_location="front" template_app="vpdb"><![CDATA[
+ <template template_group="releases" template_name="streamResult" template_data="$release, $mainAuthor, $otherAuthors, $view" template_location="front" template_app="vpdb"><![CDATA[
 <li class='ipsStreamItem ipsStreamItem_contentBlock ipsStreamItem_{$view} ipsAreaBackground_reset ipsPad'>
 	<div class='ipsStreamItem_container ipsClearfix'>
 
@@ -443,7 +446,7 @@
 		{{endif}}
 	</div>
 </li>]]></template>
- <template template_group="releases" template_name="view" template_data="$release, $comments" template_location="front" template_app="vpdb"><![CDATA[
+ <template template_group="releases" template_name="view" template_data="$release, $comments, $isLogged" template_location="front" template_app="vpdb"><![CDATA[
 <div class="ipsPad">
 
 	<!-- title -->
@@ -536,7 +539,12 @@
 					<!-- download button -->
 					<ul class="ipsToolList ipsToolList_vertical ipsSpacer_top ipsClearfix">
 						<li>
-							<a href="{$release->download}" data-ipsDialog data-ipsDialog-size='medium' data-ipsDialog-title='{lang="download"}' class="ipsButton ipsButton_fullWidth ipsButton_large ipsButton_important">Download</a>
+							{{if $isLogged}}
+								<a href="{$release->download}" data-ipsDialog data-ipsDialog-size='medium' data-ipsDialog-title='{lang="download"}' class="ipsButton ipsButton_fullWidth ipsButton_large ipsButton_important">Download</a>
+							{{else}}
+								{template="downloadTeaser" app="vpdb" group="releases"}
+							{{endif}}
+
 						</li>
 					</ul>
 				</div>
