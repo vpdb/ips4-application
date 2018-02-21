@@ -30,7 +30,9 @@ $lang = array(
 	'vpdb_url_storage' => 'Storage Endpoint',
 	'vpdb_settings_authentication' => 'Authentication',
 	'vpdb_settings_endpoints' => 'Endpoints',
-	'vpdb_settings_invalid_api' => 'Could not connect to API!',
+	'vpdb_settings_invalid_api_url' => 'Could not connect to API!',
+	'vpdb_settings_not_provider_key' => 'Not a provider token. Personal tokens will not work when connecting as a service.',
+	'vpdb_settings_inactive_key' => 'App key is disabled. Please enable at VPDB or use an enabled key.',
 	'r__vpdb_manage' => 'Can change VPDB settings?',
 
 	// home

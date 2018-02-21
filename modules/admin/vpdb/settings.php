@@ -65,11 +65,22 @@ class _settings extends \IPS\Dispatcher\Controller
 
 		if ($values = $form->values()) {
 
-			$api = new \RestClient([ 'base_url' => $values['vpdb_url_api'], 'format' => "json" ]);
-			$result = $api->get("/v1");
+			$api = new \RestClient(['base_url' => $values['vpdb_url_api'], 'format' => 'json']);
+			$result = $api->get("/v1/tokens/" . $values['vpdb_app_key']);
 
-			if (!$result['app_name']) {
-				$form->error	= \IPS\Member::loggedIn()->language()->addToStack('vpdb_settings_invalid_api');
+			if ($result->info->http_code != 200) {
+				$form->error = \IPS\Member::loggedIn()->language()->addToStack('vpdb_settings_invalid_api_url');
+				\IPS\Output::i()->output = $form;
+				return;
+			}
+			$token = $result->decode_response();
+			if ($token->type != 'application') {
+				$form->error = \IPS\Member::loggedIn()->language()->addToStack('vpdb_settings_not_provider_key');
+				\IPS\Output::i()->output = $form;
+				return;
+			}
+			if (!$token->is_active) {
+				$form->error = \IPS\Member::loggedIn()->language()->addToStack('vpdb_settings_inactive_key');
 				\IPS\Output::i()->output = $form;
 				return;
 			}
@@ -79,7 +90,7 @@ class _settings extends \IPS\Dispatcher\Controller
 			/* Clear guest page caches */
 			\IPS\Data\Cache::i()->clearAll();
 
-			\IPS\Session::i()->log( 'acplogs__vpdb_settings' );
+			\IPS\Session::i()->log('acplogs__vpdb_settings');
 		}
 
 		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack('settings');
