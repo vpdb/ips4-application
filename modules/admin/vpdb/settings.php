@@ -53,7 +53,7 @@ class _settings extends \IPS\Dispatcher\Controller
 		$form->addHeader('vpdb_settings_authentication');
 		$form->add(new \IPS\Helpers\Form\Text('vpdb_app_key', \IPS\Settings::i()->vpdb_app_key));
 		$form->add(new \IPS\Helpers\Form\Select('vpdb_oauth_client', \IPS\Settings::i()->vpdb_oauth_client, TRUE, array('options' => $oauth_clients)));
-		$form->add(new \IPS\Helpers\Form\Text('vpdb_authorization_header', \IPS\Settings::i()->vpdb_authorization_header));
+		$form->add(new \IPS\Helpers\Form\Text('vpdb_authorization_header', \IPS\Settings::i()->vpdb_authorization_header, TRUE));
 
 		$form->addHeader('vpdb_settings_endpoints');
 		$form->add(new \IPS\Helpers\Form\Url('vpdb_url_web', \IPS\Settings::i()->vpdb_url_web, TRUE));
