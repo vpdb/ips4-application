@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <javascript app="vpdb">
- <file javascript_app="vpdb" javascript_location="front" javascript_path="controllers/core" javascript_name="ips.register.js" javascript_type="controller" javascript_version="10000" javascript_position="1000050">/**
+ <file javascript_app="vpdb" javascript_location="front" javascript_path="controllers/core" javascript_name="ips.register.js" javascript_type="controller" javascript_version="10001" javascript_position="1000050">/**
  * This submits the form, causing the browser to download the file from VPDB,
  * and redirects to the given URL.
  */
@@ -39,7 +39,7 @@
 	});
 
 }(jQuery, _));</file>
- <file javascript_app="vpdb" javascript_location="front" javascript_path="controllers/download" javascript_name="ips.download.release.js" javascript_type="controller" javascript_version="10000" javascript_position="1000100"><![CDATA[/**
+ <file javascript_app="vpdb" javascript_location="front" javascript_path="controllers/download" javascript_name="ips.download.release.js" javascript_type="controller" javascript_version="10001" javascript_position="1000100"><![CDATA[/**
  * This submits the form, causing the browser to download the file from VPDB,
  * and redirects to the given URL.
  */
