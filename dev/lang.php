@@ -10,8 +10,9 @@ $lang = array(
 	'__app_vpdb' => "VPDB",
 
 	// front navigation
-	'module__vpdb_vpdb' => "VPDB",
+	'module__vpdb_vpdb' => "VPDB (deprecated)",
 	'module__vpdb_releases' => "Releases",
+	'module__vpdb_core' => 'Core',
 	'frontnavigation_home' => "VPDB Home",
 	'frontnavigation_releases' => "Releases",
 	'frontnavigation_releases_admin' => "Releases (VPDB)",
