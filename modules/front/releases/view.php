@@ -64,9 +64,44 @@ class _view extends \IPS\Content\Controller
 			// download link
 			$release->download = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&releaseId=' . $release->id . '&gameId=' . $release->game->id);
 
+			// flavor grid
+			$flavors = [];
+			foreach ($release->versions as $version) {
+				foreach ($version->files as $versionFile) {
+					if ($versionFile->flavor) {
+						$versionFile->version = $version;
+						$flavors[] = $versionFile;
+					}
+				}
+			}
+			$flavorGrid = [];
+			foreach ($flavors as $file) {
+				$compat = array_column($file->compatibility, 'id');
+				sort($compat);
+				$flavor = '';
+				$flavorKeys = get_object_vars($file->flavor);
+				sort($flavorKeys);
+				foreach($flavorKeys as $key) {
+					$flavor .= $key . ':' . $file->flavor->$key . ',';
+				}
+				$key = implode('/', $compat) . '-' . $flavor;
+				$short = $file->flavor->orientation === 'any' && $file->flavor->lighting === 'any'
+					? 'Universal'
+					: \IPS\vpdb\Vpdb\Api::$flavors['orientation']['values'][$file->flavor->orientation]['short'] . ' / ' . \IPS\vpdb\Vpdb\Api::$flavors['lighting']['values'][$file->flavor->lighting]['name'];
+
+				$flavorGrid[$key] = [
+					'file' => $file,
+					'orientation' => \IPS\vpdb\Vpdb\Api::$flavors['orientation']['values'][$file->flavor->orientation],
+					'lighting' => \IPS\vpdb\Vpdb\Api::$flavors['lighting']['values'][$file->flavor->lighting],
+					'version' => $file->version,
+					'short' => $short
+				];
+			}
+
+
 			/* Display */
 			\IPS\Output::i()->title = $release->game->title . ' - ' . $release->name;
-			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->view($release, $release->item->renderComments(), !!\IPS\Member::loggedIn()->member_id);
+			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->view($release, $flavorGrid, $release->item->renderComments(), !!\IPS\Member::loggedIn()->member_id);
 
 		} catch (\IPS\vpdb\Vpdb\ApiException $e) {
 			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->apiError($e);

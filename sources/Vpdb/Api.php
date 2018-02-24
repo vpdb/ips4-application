@@ -209,6 +209,9 @@ class _Api
 		if ($release->description) {
 			$release->description = $this->markdown->text($release->description);
 		}
+		if ($release->acknowledgements) {
+			$release->acknowledgements = $this->markdown->text($release->acknowledgements);
+		}
 	}
 
 	protected function addMembers($release)

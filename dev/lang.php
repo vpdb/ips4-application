@@ -45,6 +45,13 @@ $lang = array(
 	'sort_release_popularity' => 'Popularity',
 	'vpdb_releases_count' => "{# [1:release][?:releases]}",
 
+	// releases - details
+	'vpdb_release_acknowledgements' => "Acknowledgements",
+	'vpdb_release_mod_permissions' => "Mod Permissions",
+	'vpdb_release_mod_permission_by_sa' => "This release can be freely modded when properly credited, without explicit permission from the author%s.",
+	'vpdb_release_mod_permission_by_nd' => "This release cannot be freely modded and needs explicit permissions from the author%s.",
+	'vpdb_release_flavors' => "Available Flavors",
+
 	// releases - download
 	'vpdb_download_flavor_each' => "<b>%s</b> Orientation, <b>%s</b> Lighting",
 	'vpdb_download_flavor_both_universal' => "<b>Universal</b> Orientation and Lighting",
