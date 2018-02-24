@@ -18,7 +18,9 @@
   <word key="vpdb_url_storage" js="0">Storage Endpoint</word>
   <word key="vpdb_settings_authentication" js="0">Authentication</word>
   <word key="vpdb_settings_endpoints" js="0">Endpoints</word>
-  <word key="vpdb_settings_invalid_api" js="0">Could not connect to API!</word>
+  <word key="vpdb_settings_invalid_api_url" js="0">Could not connect to API!</word>
+  <word key="vpdb_settings_not_provider_key" js="0">Not a provider token. Personal tokens will not work when connecting as a service.</word>
+  <word key="vpdb_settings_inactive_key" js="0">App key is disabled. Please enable at VPDB or use an enabled key.</word>
   <word key="r__vpdb_manage" js="0">Can change VPDB settings?</word>
   <word key="vpdb_home_title" js="0">VPDB Home</word>
   <word key="sort_release_name" js="0">Release Name</word>
@@ -26,6 +28,11 @@
   <word key="sort_release_rating" js="0">Best rated</word>
   <word key="sort_release_popularity" js="0">Popularity</word>
   <word key="vpdb_releases_count" js="0">{# [1:release][?:releases]}</word>
+  <word key="vpdb_release_acknowledgements" js="0">Acknowledgements</word>
+  <word key="vpdb_release_mod_permissions" js="0">Mod Permissions</word>
+  <word key="vpdb_release_mod_permission_by_sa" js="0">This release can be freely modded when properly credited, without explicit permission from the author%s.</word>
+  <word key="vpdb_release_mod_permission_by_nd" js="0">This release cannot be freely modded and needs explicit permissions from the author%s.</word>
+  <word key="vpdb_release_flavors" js="0">Available Flavors</word>
   <word key="vpdb_download_flavor_each" js="0"><![CDATA[<b>%s</b> Orientation, <b>%s</b> Lighting]]></word>
   <word key="vpdb_download_flavor_both_universal" js="0"><![CDATA[<b>Universal</b> Orientation and Lighting]]></word>
   <word key="vpdb_download_media" js="0">Media</word>

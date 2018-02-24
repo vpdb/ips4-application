@@ -446,7 +446,7 @@
 		{{endif}}
 	</div>
 </li>]]></template>
- <template template_group="releases" template_name="view" template_data="$release, $comments, $isLogged" template_location="front" template_app="vpdb"><![CDATA[
+ <template template_group="releases" template_name="view" template_data="$release, $flavorGrid, $comments, $isLogged" template_location="front" template_app="vpdb"><![CDATA[
 <div class="ipsPad">
 
 	<!-- title -->
@@ -513,6 +513,61 @@
 						</div>
 					</section>
 
+					<!-- acknowledgements -->
+					{{if $release->acknowledgements}}
+						<section class='ipsType_normal ipsSpacer_top'>
+							<h2>{lang="vpdb_release_acknowledgements"}</h2>
+							<div class='ipsType_richText ipsContained ipsType_break' itemprop='text' data-controller='core.front.core.lightboxedImages'>
+								{$release->acknowledgements|raw}
+							</div>
+						</section>
+					{{endif}}
+
+					<!-- mod permissions -->
+					<section class='ipsType_normal ipsSpacer_top'>
+						<h2>{lang="vpdb_release_mod_permissions"}</h2>
+						{{if $release->license === 'by-sa'}}
+							<p>{lang="vpdb_release_mod_permission_by_sa" sprintf="count($release->authors) == 1 ? '' : 's'"}</p>
+						{{else}}
+							<p>{lang="vpdb_release_mod_permission_by_nd" sprintf="count($release->authors) == 1 ? '' : 's'"}</p>
+						{{endif}}
+					</section>
+
+					<!-- flavor grid -->
+					<section class='ipsType_normal ipsSpacer_top'>
+						<h2>{lang="vpdb_release_flavors"}</h2>
+						<table class="ipsTable vpdbTable">
+							<thead>
+							<tr>
+								<th width="55"></th>
+								<th>Orientation</th>
+								<th>Lighting</th>
+								<th>Compatibility</th>
+								<th>Size</th>
+							</tr>
+							</thead>
+							<tbody>
+							{{foreach $flavorGrid as $flavor}}
+								<tr>
+									<td>
+										<a href="{$flavor['file']->playfield_image->variations->full->url}" data-ipsLightbox>
+											<img src="{$flavor['file']->playfield_image->variations->square->url}" width="40" height="40">
+										</a>
+									</td>
+									<td>{$flavor['orientation']['name']}<br><i>{$flavor['orientation']['other']}</i></td>
+									<td>{$flavor['lighting']['name']}<br><i>{$flavor['lighting']['other']}</i></td>
+									<td>
+										{{foreach $flavor['file']->compatibility as $index => $compat}}
+											{{if $index > 0}}, {{endif}}{$compat->label}
+										{{endforeach}}
+									</td>
+									<td>{filesize="$flavor['file']->file->bytes"}</td>
+								</tr>
+							{{endforeach}}
+							</tbody>
+						</table>
+					</section>
+
 				</div>
 
 			</article>
@@ -529,11 +584,9 @@
 
 					<!-- playfield image -->
 					<div class="ipsAreaBackground_reset ipsPad_half">
-						<span href="{$release->thumb->image->url}" data-ipsLightbox
-							  data-ipsLightbox-group="release_{$release->id}"
-							  data-fullURL="{$release->thumb->image->url}">
+						<a href="{$release->versions[0]->files[0]->playfield_image->variations->full->url}" data-ipsLightbox>
 							<img src="{$release->thumb->image->url}" alt="{$release->title}" style="max-width:100%">
-						</span>
+						</a>
 					</div>
 
 					<!-- download button -->
