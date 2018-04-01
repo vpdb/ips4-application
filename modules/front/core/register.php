@@ -51,8 +51,9 @@ class _register extends \IPS\Dispatcher\Controller
 		\IPS\Output::i()->jsFiles = array_merge(\IPS\Output::i()->jsFiles, \IPS\Output::i()->js('front_core.js', 'vpdb'));
 
 		$registerUrl = \IPS\Http\Url::internal('app=vpdb&module=core&controller=register&do=register');
+		$vpdbUrl = \IPS\Settings::i()->vpdb_url_web;
 
-		\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->register($registerUrl);
+		\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->register($registerUrl, $vpdbUrl);
 	}
 
 	protected function register()

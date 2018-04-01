@@ -1,4 +1,4 @@
-<ips:template parameters="$registerUrl"/>
+<ips:template parameters="$registerUrl, $vpdbUrl"/>
 
 <div class="ipsPad" data-controller="vpdb.front.register" data-register="{$registerUrl}">
 	<p>Just one second...</p>
@@ -6,8 +6,10 @@
 	<p>The content you just visited came from VPDB, an open and centralized database for virtual pinball and a joint
 		venture with {setting="board_name"}.</p>
 	<p>If you continue, we will create an account for you at VPDB that allows you to download and rate content here
-		through VPDB. If you already have an account at VPDB, just make sure you used the same email address as here and
-		your existing account will be used.</p>
+		through VPDB. If you already have an account under the same email as here, that account will be used.</p>
+
+	<p>If your account at VPDB has a different email, you can link your account under <i>Linked Accounts</i>
+		<a href="{$vpdbUrl}/profile/settings" target="_blank">here</a>.</p>
 
 	<!-- error message -->
 	<div id="registerError" class="ipsMessage ipsMessage_error" style="display:none"></div>
