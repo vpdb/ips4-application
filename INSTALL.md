@@ -12,9 +12,7 @@ Go to AdminCP, under *System*, choose *REST & OAuth*.
 <details>
  <summary>Screenshot</summary>
  <img src="https://raw.githubusercontent.com/vpdb/ips4-application/master/doc/img/setup-01-oauth-main.png"/>
- 
 </details>
-
 
 You might need to download and copy a `.htaccess` files to your `api` folder.
 If you're running Apache that will do it, if you're using Nginx I will add
@@ -32,7 +30,6 @@ once (*New sign ins only*).
 <details>
  <summary>Screenshot</summary>
  <img src="https://raw.githubusercontent.com/vpdb/ips4-application/a9da0785614660e21dd81a22899766c0a492b070/doc/img/setup-02-oauth-create-new.png"/>
- 
 </details>
 
 Switch to *Scopes*. The scopes define what permission VPDB is going to ask.
@@ -45,7 +42,6 @@ are checked like in the screenshot.
 <details>
  <summary>Screenshot</summary>
  <img src="https://raw.githubusercontent.com/vpdb/ips4-application/a9da0785614660e21dd81a22899766c0a492b070/doc/img/setup-03-oauth-scopes.png"/>
- 
 </details>
 
 Now click on *Save* on the bottom on the screen.
@@ -58,7 +54,6 @@ board. Write those down so they can be added to VPDB!
 <details>
  <summary>Screenshot</summary>
  <img src="https://raw.githubusercontent.com/vpdb/ips4-application/a9da0785614660e21dd81a22899766c0a492b070/doc/img/setup-04-oauth-client-secret.png"/>
- 
 </details>
 
 ### 4. Done!
@@ -68,5 +63,4 @@ That's it! You should now see the VPDB client under *REST & OAuth*.
 <details>
  <summary>Screenshot</summary>
  <img src="https://raw.githubusercontent.com/vpdb/ips4-application/a9da0785614660e21dd81a22899766c0a492b070/doc/img/setup-05-oauth-done.png"/>
- 
 </details>
