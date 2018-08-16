@@ -1,4 +1,4 @@
-<ips:template parameters="$release, $flavorGrid, $comments, $isLogged"/>
+<ips:template parameters="$release, $rating, $flavorGrid, $comments, $isLogged"/>
 
 <div class="ipsPad">
 
@@ -140,6 +140,15 @@
 						<a href="{$release->versions[0]->files[0]->playfield_image->variations->full->url}" data-ipsLightbox>
 							<img src="{$release->thumb->image->url}" alt="{$release->title}" style="max-width:100%">
 						</a>
+					</div>
+
+					<!-- rating -->
+					<div class="ipsPad_top ipsPad_bottom ipsPad_double">
+						<div data-ipsRating data-ipsRating-canRate='{$isLogged ? "true" : "false"}' data-ipsRating-changeRate='true' data-ipsRating-size='veryLarge' {{if $release->rating->votes}}data-ipsRating-value="{expression="number_format($release->rating->average / 2, 1)"}"{{endif}} {{if $rating}}data-ipsRating-userRated="{expression="$rating->value / 2"}"{{endif}}>
+							{{foreach range(1, 5) as $i}}
+								<input type='radio' name='{$name}' id='{$name}_{$i}' value='{$i}' {{if $i == floor($release->rating->average / 2)}}checked{{endif}}> <label for='{$name}_{$i}'>{$i}</label>
+							{{endforeach}}
+						</div>
 					</div>
 
 					<!-- download button -->

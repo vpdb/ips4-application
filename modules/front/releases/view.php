@@ -61,6 +61,13 @@ class _view extends \IPS\Content\Controller
 		try {
 			$release = $this->api->getReleaseDetails(\IPS\Request::i()->releaseId, ['thumb_flavor' => 'orientation:fs', 'thumb_format' => 'medium']);
 
+			// rating
+			if (\IPS\Member::loggedIn()->member_id) {
+				$rating = $this->api->getReleaseRating(\IPS\Request::i()->releaseId);
+			} else {
+				$rating = null;
+			}
+
 			// download link
 			$release->download = \IPS\Http\Url::internal('app=vpdb&module=releases&controller=download&releaseId=' . $release->id . '&gameId=' . $release->game->id);
 
@@ -98,14 +105,17 @@ class _view extends \IPS\Content\Controller
 				];
 			}
 
-
 			/* Display */
 			\IPS\Output::i()->title = $release->game->title . ' - ' . $release->name;
-			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->view($release, $flavorGrid, $release->item->renderComments(), !!\IPS\Member::loggedIn()->member_id);
+			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('releases')->view($release, $rating, $flavorGrid, $release->item->renderComments(), !!\IPS\Member::loggedIn()->member_id);
 
 		} catch (\IPS\vpdb\Vpdb\ApiException $e) {
 			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('core')->apiError($e);
 		}
+	}
+
+	protected function rate() {
+
 	}
 
 	// Create new methods with the same name as the 'do' parameter which should execute it

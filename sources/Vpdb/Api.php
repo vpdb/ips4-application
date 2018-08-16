@@ -166,6 +166,14 @@ class _Api
 		return $release;
 	}
 
+	public function getReleaseRating($releaseId) {
+		$result = $this->client->get("/v1/releases/" . $releaseId . "/rating", [], $this->getUserHeader());
+		if ($result->info->http_code != 200) {
+			return null;
+		}
+		return $result->decode_response();
+	}
+
 	/**
 	 * Returns all ROMs of a given game
 	 * @param $gameId string Game ID
