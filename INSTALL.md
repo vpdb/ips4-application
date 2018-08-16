@@ -31,7 +31,7 @@ once (*New sign ins only*).
 
 <details>
  <summary>Screenshot</summary>
- <img src="https://raw.githubusercontent.com/vpdb/ips4-application/master/doc/img/setup-02-oauth-create-new.png"/>
+ <img src="https://raw.githubusercontent.com/vpdb/ips4-application/a9da0785614660e21dd81a22899766c0a492b070/doc/img/setup-02-oauth-create-new.png"/>
  
 </details>
 
@@ -44,7 +44,7 @@ are checked like in the screenshot.
 
 <details>
  <summary>Screenshot</summary>
- <img src="https://raw.githubusercontent.com/vpdb/ips4-application/master/doc/img/setup-03-oauth-scopes.png"/>
+ <img src="https://raw.githubusercontent.com/vpdb/ips4-application/a9da0785614660e21dd81a22899766c0a492b070/doc/img/setup-03-oauth-scopes.png"/>
  
 </details>
 
@@ -57,7 +57,7 @@ board. Write those down so they can be added to VPDB!
 
 <details>
  <summary>Screenshot</summary>
- <img src="https://raw.githubusercontent.com/vpdb/ips4-application/master/doc/img/setup-04-oauth-client-secret.png"/>
+ <img src="https://raw.githubusercontent.com/vpdb/ips4-application/a9da0785614660e21dd81a22899766c0a492b070/doc/img/setup-04-oauth-client-secret.png"/>
  
 </details>
 
@@ -67,6 +67,6 @@ That's it! You should now see the VPDB client under *REST & OAuth*.
 
 <details>
  <summary>Screenshot</summary>
- <img src="https://raw.githubusercontent.com/vpdb/ips4-application/master/doc/img/setup-05-oauth-done.png"/>
+ <img src="https://raw.githubusercontent.com/vpdb/ips4-application/a9da0785614660e21dd81a22899766c0a492b070/doc/img/setup-05-oauth-done.png"/>
  
 </details>
