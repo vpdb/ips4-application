@@ -10,7 +10,7 @@ class vpdb_hook_Member extends _HOOK_CLASS_
 
 	public function isOnVpdb()
 	{
-		return \IPS\Db::i()->select('COUNT(*)', 'oauth2server_members', array('client_id=? AND member_id=?', \IPS\Settings::i()->vpdb_oauth_client, $this->member_id))->first() > 0;
+		return \IPS\Db::i()->select('COUNT(*)', 'core_oauth_server_access_tokens', array('client_id=? AND member_id=?', \IPS\Settings::i()->vpdb_oauth_client, $this->member_id))->first() > 0;
 	}
 
 

@@ -70,12 +70,15 @@ class _register extends \IPS\Dispatcher\Controller
 			$this->api->registerUser(\IPS\Member::loggedIn());
 
 			// enable oauth at ips
-			\IPS\Db::i()->insert('oauth2server_members', [
-				'client_id' => \IPS\Settings::i()->vpdb_oauth_client,
-				'member_id' => intval(\IPS\Member::loggedIn()->member_id),
-				'created_at' => date('Y-m-d H:i:s'),
-				'scope' => null
-			], true);
+			$client = \IPS\Api\OAuthClient::load(\IPS\Settings::i()->vpdb_oauth_client);
+			$client->generateAccessToken(\IPS\Member::loggedIn(), array('profile', 'email'), 'implicit', TRUE);
+
+//			\IPS\Db::i()->insert('oauth2server_members', [
+//				'client_id' => \IPS\Settings::i()->vpdb_oauth_client,
+//				'member_id' => intval(\IPS\Member::loggedIn()->member_id),
+//				'created_at' => date('Y-m-d H:i:s'),
+//				'scope' => null
+//			], true);
 			\IPS\Output::i()->json(array('success' => true));
 
 		} catch (\RestClientException $e) {
