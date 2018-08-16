@@ -66,7 +66,7 @@ class _settings extends \IPS\Dispatcher\Controller
 				return;
 			}
 			$token = $result->decode_response();
-			if ($token->type != 'application') {
+			if ($token->type != 'provider') {
 				$form->error = \IPS\Member::loggedIn()->language()->addToStack('vpdb_settings_not_provider_key');
 				\IPS\Output::i()->output = $form;
 				return;
