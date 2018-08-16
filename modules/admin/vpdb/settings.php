@@ -35,18 +35,10 @@ class _settings extends \IPS\Dispatcher\Controller
 	{
 		\IPS\Output::i()->title = \IPS\Member::loggedIn()->language()->addToStack('settings');
 
-		$oauth_clients = [];
-		try {
-			foreach (\IPS\Db::i()->select('*', 'oauth2server_clients') as $client) {
-				$oauth_clients[$client['client_id']] = $client['client_name'];
-			}
-		} catch (\IPS\Db\Exception $e) {
-
-			// this goes into "{app}/dev/html/admin/settings" and loads "oauthError.phtml". like, why not name methods after files!
-			\IPS\Output::i()->output = \IPS\Theme::i()->getTemplate('settings')->oauthError();
-			return;
+		foreach (\IPS\Db::i()->select('*', 'core_oauth_clients') as $client) {
+			$client_title_key = 'core_oauth_client_' . $client['oauth_client_id'];
+			$oauth_clients[$client['oauth_client_id']] = \IPS\Member::loggedIn()->language()->addToStack($client_title_key);
 		}
-
 
 		$form = new \IPS\Helpers\Form;
 
