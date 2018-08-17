@@ -5,15 +5,17 @@
 <pre>
 	{$body}
 </pre>]]></template>
- <template template_group="core" template_name="register" template_data="$registerUrl" template_location="front" template_app="vpdb"><![CDATA[
+ <template template_group="core" template_name="register" template_data="$registerUrl, $vpdbUrl" template_location="front" template_app="vpdb"><![CDATA[
 <div class="ipsPad" data-controller="vpdb.front.register" data-register="{$registerUrl}">
 	<p>Just one second...</p>
 	<h1>{setting="board_name"} <i class="fa fa-heart"></i> VPDB!</h1>
 	<p>The content you just visited came from VPDB, an open and centralized database for virtual pinball and a joint
 		venture with {setting="board_name"}.</p>
 	<p>If you continue, we will create an account for you at VPDB that allows you to download and rate content here
-		through VPDB. If you already have an account at VPDB, just make sure you used the same email address as here and
-		your existing account will be used.</p>
+		through VPDB. If you already have an account under the same email as here, that account will be used.</p>
+
+	<p>If your account at VPDB has a different email, you can link your account under <i>Linked Accounts</i>
+		<a href="{$vpdbUrl}/profile/settings" target="_blank">here</a>.</p>
 
 	<!-- error message -->
 	<div id="registerError" class="ipsMessage ipsMessage_error" style="display:none"></div>
@@ -446,7 +448,7 @@
 		{{endif}}
 	</div>
 </li>]]></template>
- <template template_group="releases" template_name="view" template_data="$release, $flavorGrid, $comments, $isLogged" template_location="front" template_app="vpdb"><![CDATA[
+ <template template_group="releases" template_name="view" template_data="$release, $rating, $flavorGrid, $comments, $isLogged" template_location="front" template_app="vpdb"><![CDATA[
 <div class="ipsPad">
 
 	<!-- title -->
@@ -589,6 +591,15 @@
 						</a>
 					</div>
 
+					<!-- rating -->
+					<div class="ipsPad_top ipsPad_bottom ipsPad_double">
+						<div data-ipsRating data-ipsRating-canRate='{$isLogged ? "true" : "false"}' data-ipsRating-changeRate='true' data-ipsRating-size='veryLarge' {{if $release->rating->votes}}data-ipsRating-value="{expression="number_format($release->rating->average / 2, 1)"}"{{endif}} {{if $rating}}data-ipsRating-userRated="{expression="$rating->value / 2"}"{{endif}}>
+							{{foreach range(1, 5) as $i}}
+								<input type='radio' name='{$name}' id='{$name}_{$i}' value='{$i}' {{if $i == floor($release->rating->average / 2)}}checked{{endif}}> <label for='{$name}_{$i}'>{$i}</label>
+							{{endforeach}}
+						</div>
+					</div>
+
 					<!-- download button -->
 					<ul class="ipsToolList ipsToolList_vertical ipsSpacer_top ipsClearfix">
 						<li>
@@ -615,11 +626,6 @@
 		{{endif}}
 	</div>
 </div>]]></template>
- <template template_group="settings" template_name="oauthError" template_data="" template_location="admin" template_app="vpdb"><![CDATA[<h3>Whoops!</h3>
-
-<p>In order to use the VPDB application, you'll need another application installed:</p>
-<p><b><a href="https://github.com/wohali/ips4-oauth2-server/releases" target="_blank">OAuth2 Server for IPS4</a></b></p>
-<p>This is necessary because VPDB will need to authenticate users on this site and vice versa.</p>]]></template>
  <css css_location="front" css_app="vpdb" css_attributes="" css_path="." css_name="layout.css">/* SPACER STYLES */
 .ipsApp .ipsSpacer_left, .ipsApp .ipsSpacer_both {
 	margin-left: 15px;
