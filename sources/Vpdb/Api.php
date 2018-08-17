@@ -65,7 +65,7 @@ class _Api
 	}
 
 	/**
-	 * Returns the VPDB profile of currently loged IPS user.
+	 * Returns the VPDB profile of currently logged IPS user.
 	 *
 	 * @return mixed|null Profile or null if user not registered at VPDB. All other errors throw an exception.
 	 * @throws \RestClientException

@@ -388,7 +388,7 @@ class _Release extends \IPS\Content\Item implements
 	 * @return    static
 	 * @throws    \OutOfRangeException
 	 */
-	public static function loadAndCheckPerms($id)
+	public static function loadAndCheckPerms($id, \IPS\Member $member = NULL)
 	{
 		if (!$id) {
 			$obj = static::load(\IPS\Request::i()->releaseId, 'release_id_vpdb');
