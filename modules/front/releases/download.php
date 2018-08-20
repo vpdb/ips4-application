@@ -142,7 +142,7 @@ class _download extends \IPS\Dispatcher\Controller
 			}
 
 		} catch (\IPS\vpdb\Vpdb\ApiException $e) {
-			\IPS\Output::i()->json(array('error' => $e));
+			\IPS\Output::i()->json(array('error' => $e->getError()));
 		}
 	}
 
