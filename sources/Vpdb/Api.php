@@ -72,7 +72,7 @@ class _Api
 	 */
 	public function getUserProfile()
 	{
-		$result = $this->client->get("/v1/user", [], $this->getUserHeader());
+		$result = $this->client->get("/v1/profile", [], $this->getUserHeader());
 		if ($result->info->http_code == 400 && preg_match('/no user with id "\d+" for provider/i', $result->decode_response()->error)) {
 			return null;
 		}
