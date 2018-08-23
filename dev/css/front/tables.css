@@ -1,6 +1,6 @@
 .ipsTable.vpdbTable th {
 	text-align: left;
-	background: {theme="area_background_light"};
+	background: rgba(127,127,127,0.5);
 	padding: 7px;
 	font-size: 13px;
 }
