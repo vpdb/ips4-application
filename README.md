@@ -30,10 +30,10 @@ not index local releases.
 
 Basically we want to match VPDB users with IPS users so they can get the
 reputation at IPS, but also star, rate and follow stuff at IPS. This is done
-using the [OAuth2 Server Application](https://github.com/wohali/ips4-oauth2-server),
-which lets IPS users log at VPDB. The other way around is possible as well, i.e.
-users who want to access VPDB resources at IPS will get a one-click 
-registration within IPS.
+using the new [OAuth2 server feature](https://invisioncommunity.com/news/product-updates/43-sign-in-from-other-sites-using-oauth-r1058/)
+in IPS v4.3, which lets IPS users log at VPDB. The other way around is possible
+as well, i.e. users who want to access VPDB resources at IPS will get a 
+one-click registration within IPS.
 
 This allows VPDB to include IPS user IDs whenever user data is returned so
 the IPS app can identify the user and render the widgets accordingly.
@@ -42,7 +42,6 @@ Feature Set:
 
 - [X] Identify and link IPS users based on VPDB data
 - [X] Login at VPDB through IPS
-- [ ] Login at IPS through VPDB 
 
 
 ### Activity Streams
@@ -54,7 +53,7 @@ which allows to include extra items to stream results.
 We do this by not including local releases in IPS' search index but fetching
 them directly through the API. 
 
-- [ ] List VPDB data in the user's activity stream
+- [X] List VPDB data in the user's activity stream
 - [ ] Display VPDB stats in user's info popup
 - [ ] Get notified when a followed user creates content at VPDB
 
@@ -75,7 +74,7 @@ it doesn't integrate well with IPS' notification system, which needs the name
 of the parent and not right after comment creation when we still have it, but
 also later when users log on.
 
-So we create a `vpdb_releases` table that just holds data that usually doesn't
+So we created a `vpdb_releases` table that just holds data that usually doesn't
 change, like release and game ID (and game name for displaying). Additionally
 it holds IPS' internal counters for comments.
 
@@ -98,7 +97,7 @@ This is the current feature set of release comments:
 
 ### Reputation
 
-Releases and other VPDB content can be reacted to, using [IPS 4.2's new
+Releases and other VPDB content can be reacted to, using [IPS 4.2's
 reaction API](https://invisioncommunity.com/news/product-updates/new-reactions-r1016/).
 The problem is that VPDB can have multiple authors per release, while IPS 
 supports only one single content creator per item.
@@ -117,8 +116,8 @@ Finally the following approach was chosen:
   
 The reputation is computed incrementally, meaning it's not computed from the
 search index (which would only contain one author). However, the admin can 
-choose to re-compute it manually. In this case, there is a hook that ignores
-the index for VPDB data (since the author is random) and retrieves the
+choose to re-compute it manually. For this case we've created a hook that 
+ignores the index for VPDB data (since the author is random) and retrieves the
 number of releases directly from the VPDB API in order to correctly compute the 
 reputation.
 
