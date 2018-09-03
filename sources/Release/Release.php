@@ -1,12 +1,11 @@
 <?php
 /**
- * @brief        Image Model
- * @author        <a href='https://www.invisioncommunity.com'>Invision Power Services, Inc.</a>
- * @copyright    (c) Invision Power Services, Inc.
- * @license        https://www.invisioncommunity.com/legal/standards/
- * @package        Invision Community
- * @subpackage    Gallery
- * @since        04 Mar 2014
+ * @brief        Release Model
+ * @author       <a href='mailto.freezy@vpdb.io'>freezy</a>
+ * @copyright    (c) 2018 VPDB
+ * @license      https://opensource.org/licenses/GPL-2.0
+ * @package      VPDB
+ * @since        Aug 2018
  */
 
 namespace IPS\vpdb;
@@ -18,7 +17,7 @@ if (!defined('\IPS\SUITE_UNIQUE_KEY')) {
 }
 
 /**
- * Image Model
+ * Release Model
  */
 class _Release extends \IPS\Content\Item implements
 	\IPS\Content\Searchable,
@@ -62,6 +61,7 @@ class _Release extends \IPS\Content\Item implements
 	 */
 	public static $databaseColumnMap = array(
 		'title' => 'caption',
+		'content' => 'caption', 
 		'author' => 'member_id',
 		'num_comments' => 'comments',
 		'unapproved_comments' => 'unapproved_comments',

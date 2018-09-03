@@ -3,8 +3,8 @@
         "type": "C",
         "class": "\\IPS\\Member"
     },
-    "Index": {
+    "Query": {
         "type": "C",
-        "class": "\\IPS\\Content\\Search\\Mysql\\Index"
+        "class": "\\IPS\\Content\\Search\\Mysql\\Query"
     }
 }

@@ -257,7 +257,7 @@ class _Api
 			'release_member_ids' => join(',', $otherMembers),
 			'release_game_id_vpdb' => $release->game->id,
 			'release_game_title' => $release->game->title,
-			'release_game_manufacturer' => $release->game->title,
+			'release_game_manufacturer' => $release->game->manufacturer,
 			'release_game_year' => $release->game->year,
 			'release_caption' => $caption,
 		);
