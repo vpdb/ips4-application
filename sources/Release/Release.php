@@ -62,6 +62,7 @@ class _Release extends \IPS\Content\Item implements
 	public static $databaseColumnMap = array(
 		'title' => 'caption',
 		'content' => 'name',
+		'date' => 'edit_date',
 		'author' => 'member_id',
 		'num_comments' => 'comments',
 		'unapproved_comments' => 'unapproved_comments',
@@ -163,6 +164,26 @@ class _Release extends \IPS\Content\Item implements
 	}
 
 	/**
+	 * Get snippet HTML for search result display
+	 *
+	 * @param	array		$indexData		Data from the search index
+	 * @param	array		$authorData		Basic data about the author. Only includes columns returned by \IPS\Member::columnsForPhoto()
+	 * @param	array		$itemData		Basic data about the item. Only includes columns returned by item::basicDataColumns()
+	 * @param	array|NULL	$containerData	Basic data about the container. Only includes columns returned by container::basicDataColumns()
+	 * @param	array		$reputationData	Array of people who have given reputation and the reputation they gave
+	 * @param	int|NULL	$reviewRating	If this is a review, the rating
+	 * @param	string		$view			'expanded' or 'condensed'
+	 * @return	callable
+	 */
+	public static function searchResultSnippet( array $indexData, array $authorData, array $itemData, array $containerData = NULL, array $reputationData, $reviewRating, $view )
+	{
+		$api = \IPS\vpdb\Vpdb\Api::getInstance();
+		$release = $api->getReleaseDetails($itemData['release_id_vpdb'], ['ignore_count' => '1', 'thumb_format' => 'medium']);
+		$authors = self::splitAuthors($release, $authorData);
+		return \IPS\Theme::i()->getTemplate('releases', 'vpdb', 'front')->searchResultReleaseSnippet($release, $authors[1], $view == 'condensed');
+	}
+
+	/**
 	 * Return the language string key to use in search results
 	 *
 	 * @note Normally we show "(user) posted a (thing) in (area)" but sometimes this may not be accurate, so this is abstracted to allow
@@ -180,6 +201,38 @@ class _Release extends \IPS\Content\Item implements
 		} else {
 			return parent::searchResultSummaryLanguage($authorData, $articles, $indexData, $itemData);
 		}
+	}
+
+	/**
+	 * Separates a user from the list of authors
+	 * @param $release Release
+	 * @param $currentAuthor array to separate or null if unknown
+	 * @return array First is selected author, second are other authors
+	 */
+	public static function splitAuthors($release, $currentAuthor) {
+
+		// if $author is set, it's the main author we're listing, otherwise just take the first.
+		if ($currentAuthor) {
+			$mainAuthor = null;
+			$otherAuthors = [];
+			foreach ($release->authors as $a) {
+				if ($a->user->member && $a->user->member->member_id == $currentAuthor->member_id) {
+					$mainAuthor = $a;
+				} else {
+					$otherAuthors[] = $a;
+				}
+			}
+
+			// remove once we search correctly
+			if (!$mainAuthor) {
+				$mainAuthor = $release->authors[0];
+				$otherAuthors = array_slice($release->authors, 1);
+			}
+		} else {
+			$mainAuthor = $release->authors[0];
+			$otherAuthors = array_slice($release->authors, 1);
+		}
+		return array($mainAuthor, $otherAuthors);
 	}
 
 	/**

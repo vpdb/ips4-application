@@ -36,28 +36,7 @@ class _StreamResult extends \IPS\Content\Search\Result
 	 */
 	public function html($view = 'expanded')
 	{
-		// if $author is set, it's the main author we're listing, otherwise just take the first.
-		if ($this->author) {
-			$mainAuthor = null;
-			$otherAuthors = [];
-			foreach ($this->release->authors as $a) {
-				if ($a->user->member && $a->user->member->member_id == $this->author->member_id) {
-					$mainAuthor = $a;
-				} else {
-					$otherAuthors[] = $a;
-				}
-			}
-
-			// remove once we search correctly
-			if (!$mainAuthor) {
-				$mainAuthor = $this->release->authors[0];
-				$otherAuthors = array_slice($this->release->authors, 1);
-			}
-		} else {
-			$mainAuthor = $this->release->authors[0];
-			$otherAuthors = array_slice($this->release->authors, 1);
-		}
-
-		return \IPS\Theme::i()->getTemplate('releases', 'vpdb', 'front')->streamResult($this->release, $mainAuthor, $otherAuthors, $view);
+		$authors = \IPS\vpdb\Release::splitAuthors($this->release, $this->author);
+		return \IPS\Theme::i()->getTemplate('releases', 'vpdb', 'front')->streamResult($this->release, $authors[0], $authors[1], $view);
 	}
 }

@@ -255,6 +255,8 @@ class _Api
 		return array(
 			'release_id_vpdb' => $release->id,
 			'release_member_id' => $memberId,
+			'release_post_date' => strtotime($release->created_at),
+			'release_edit_date' => strtotime($release->modified_at),
 			'release_member_ids' => join(',', $otherMembers),
 			'release_game_id_vpdb' => $release->game->id,
 			'release_name' => $release->name,
