@@ -61,7 +61,7 @@ class _Release extends \IPS\Content\Item implements
 	 */
 	public static $databaseColumnMap = array(
 		'title' => 'caption',
-		'content' => 'caption', 
+		'content' => 'name',
 		'author' => 'member_id',
 		'num_comments' => 'comments',
 		'unapproved_comments' => 'unapproved_comments',

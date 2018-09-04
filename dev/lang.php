@@ -63,6 +63,9 @@ $lang = array(
 	'vpdb_download_no_roms_available' => "No ROMs available for this game.",
 	'vpdb_release_download_teaser' => "Create an account or sign in to download",
 
+	// releases - general
+	'Vpdb_release' => "Table Release",
+
 	// notifications
 	'__indefart_vpdb_release_comment' => 'a comment on',
 	'__indefart_vpdb_release' => 'a Table Release',

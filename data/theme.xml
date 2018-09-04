@@ -652,7 +652,7 @@
 }</css>
  <css css_location="front" css_app="vpdb" css_attributes="" css_path="." css_name="tables.css">.ipsTable.vpdbTable th {
 	text-align: left;
-	background: {theme=&quot;area_background_light&quot;};
+	background: rgba(127,127,127,0.5);
 	padding: 7px;
 	font-size: 13px;
 }

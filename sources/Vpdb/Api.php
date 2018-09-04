@@ -49,7 +49,7 @@ class _Api
 	 */
 	public function registerUser($member)
 	{
-		$result = $this->client->put("/v1/users", json_encode([
+		$result = $this->client->put('/v1/users', json_encode([
 			'email' => $member->email,
 			'username' => $member->name,
 			'provider_id' => $member->member_id,
@@ -72,7 +72,7 @@ class _Api
 	 */
 	public function getUserProfile()
 	{
-		$result = $this->client->get("/v1/profile", [], $this->getUserHeader());
+		$result = $this->client->get('/v1/profile', [], $this->getUserHeader());
 		if ($result->info->http_code == 400 && preg_match('/no user with id "\d+" for provider/i', $result->decode_response()->error)) {
 			return null;
 		}
@@ -121,11 +121,12 @@ class _Api
 		\IPS\Db::i()->insert('vpdb_releases', $dbData, true);
 
 		// load items
-		if ($loadItems) {
+		//if ($loadItems) {
 			foreach ($releases as $release) {
 				$release->item = \IPS\vpdb\Release::load($release->id, 'release_id_vpdb');
+				\IPS\Content\Search\Index::i()->index( $release->item );
 			}
-		}
+		//}
 
 		return [$releases, $result->headers->x_list_count];
 	}
@@ -256,6 +257,7 @@ class _Api
 			'release_member_id' => $memberId,
 			'release_member_ids' => join(',', $otherMembers),
 			'release_game_id_vpdb' => $release->game->id,
+			'release_name' => $release->name,
 			'release_game_title' => $release->game->title,
 			'release_game_manufacturer' => $release->game->manufacturer,
 			'release_game_year' => $release->game->year,
