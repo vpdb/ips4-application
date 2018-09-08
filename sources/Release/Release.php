@@ -62,7 +62,7 @@ class _Release extends \IPS\Content\Item implements
 	public static $databaseColumnMap = array(
 		'title' => 'caption',
 		'content' => 'name',
-		'date' => 'edit_date',
+		'date' => 'post_date',
 		'author' => 'member_id',
 		'num_comments' => 'comments',
 		'unapproved_comments' => 'unapproved_comments',
@@ -201,6 +201,19 @@ class _Release extends \IPS\Content\Item implements
 		} else {
 			return parent::searchResultSummaryLanguage($authorData, $articles, $indexData, $itemData);
 		}
+	}
+
+	/**
+	 * Give class a chance to inspect and manipulate search engine filters for streams
+	 *
+	 * @param	array 						$filters	Filters to be used for activity stream
+	 * @param	\IPS\Content\Search\Query	$query		Search query object
+	 * @return	void
+	 */
+	public static function searchEngineFiltering( &$filters, &$query )
+	{
+		// vpdb can have multiple authors, which the index doesn't provide, so we skip it and get it through the extra items.
+		$query->filterByContent( array( \IPS\Content\Search\ContentFilter::init( 'IPS\\vpdb\\Release' ) ), FALSE);
 	}
 
 	/**
